@@ -9,8 +9,7 @@ export enum FieldType {
 
 export enum FieldUIType {
   UNKNOWN,
-  TEXT_NOT_EDITABLE,
-  TEXT_EDITABLE,
+  TEXT,
   BOOLEAN,
   VALUE_LIST,
   RANGE
@@ -20,6 +19,16 @@ export class PossibleValue {
   value: string | number
   displayName: string
   description: string
+
+  constructor(
+    value: string | number,
+    displayName: string,
+    decscription: string
+  ) {
+    this.value = value
+    this.displayName = displayName
+    this.description = this.description
+  }
 }
 
 export enum FieldVisibilityLevel {
@@ -121,8 +130,7 @@ export class Field {
   fieldUIType(): FieldUIType {
     if (typeof this.value === "string") {
       if (this.possibleValues.length > 0) return FieldUIType.VALUE_LIST
-      if (!this.isEditable) return FieldUIType.TEXT_NOT_EDITABLE
-      return FieldUIType.TEXT_EDITABLE
+      return FieldUIType.TEXT
     }
     if (typeof this.value === "boolean") {
       return FieldUIType.BOOLEAN

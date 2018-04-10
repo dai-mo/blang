@@ -1,19 +1,15 @@
 <div>
   <form [formGroup]="form">
     <div *ngFor="let field of fields" [ngSwitch]="field.fieldUIType()">
-      <div class="ui-g" *ngSwitchCase="fieldUIType.TEXT_NOT_EDITABLE">
-        <div class="ui-g-4">
-          <i class="text-primary" [attr.for]="field.name">{{field.label}}</i>
-        </div>
-        <div class="ui-g-8">
+      <div class="ui-g-4">
+        <label [attr.for]="field.name">{{field.label}}</label>
+      </div>
+      <div class="ui-g" *ngSwitchCase="fieldUIType.TEXT">
+
+        <div *ngIf="!(field.isEditable)" class="ui-g-8">
           <span [id]="field.name">{{field.value}}</span>
         </div>
-      </div>
-      <div class="ui-g" *ngSwitchCase="fieldUIType.TEXT_EDITABLE">
-        <div class="ui-g-4">
-          <label [attr.for]="field.name">{{field.label}}</label>
-        </div>
-        <span class="md-inputfield">
+        <span *ngIf="field.isEditable" class="md-inputfield">
           <div class="ui-g-8">
             <textarea [id]="field.label" rows="1" cols="25" pInputTextarea autoResize="autoResize" [formControlName]="field.name">
                         {{field.value}}
@@ -22,9 +18,7 @@
         </span>
       </div>
       <div class="ui-g" *ngSwitchCase="fieldUIType.BOOLEAN">
-        <div class="ui-g-4">
-          <label [attr.for]="field.name">{{field.label}}</label>
-        </div>
+
         <div *ngIf="!(field.isEditable)" class="ui-g-8">
           <p-checkbox [id]="field.name" [(ngModel)]="field.value" binary="true" [ngModelOptions]="{standalone: true}" disabled=true></p-checkbox>
         </div>

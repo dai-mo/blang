@@ -24,7 +24,6 @@
     "@angular/platform-browser": "5.2.0",
     "@angular/platform-browser-dynamic": "5.2.0",
     "@angular/router": "5.2.0",
-    "@blang/properties": "file:dist/blang-properties-0.1.0-SNAPSHOT.tgz",
     "@ngrx/store": "5.0.0",
     "@types/three": "0.91.0",
     "chart.js": "2.7.1",

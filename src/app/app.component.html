@@ -1,5 +1,10 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div class="layout">
-  <h2>{{embeddedFieldGroup.label}}</h2>
-  <app-fields-panel [itemFieldGroup]="embeddedFieldGroup"></app-fields-panel>
-</div>
+<p-tabView>
+  <p-tabPanel *ngFor="let tab of tabs; let i = index" [header]="tab" [selected]="i == 0">
+    <div [ngSwitch]="tab">
+      <div *ngSwitchCase="'Non Editable'" class="layout">
+        <h2>{{embeddedFieldGroup.label}}</h2>
+        <app-fields-panel [itemFieldGroup]="embeddedFieldGroup"></app-fields-panel>
+      </div>
+    </div>
+  </p-tabPanel>
+</p-tabView>

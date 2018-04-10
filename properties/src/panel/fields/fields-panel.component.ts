@@ -19,6 +19,9 @@ export class FieldsPanelComponent implements OnInit {
 
   ngOnInit() {
     this.fields = this.itemFieldGroup.fields
+    this.fields.forEach((field: Field) =>
+      console.log("fieldUIType : " + field.fieldUIType())
+    )
     this.itemFieldGroup.setCollector(this.collect)
     this.form = this.toFormGroup(this.fields)
   }
