@@ -1,5 +1,5 @@
 <div>
-  <form [formGroup]="form">
+  <form [formGroup]="fieldGroup.form">
     <div *ngFor="let field of fields" [ngSwitch]="field.fieldUIType()">
       <div class="ui-g-4">
         <label [attr.for]="field.name">{{field.label}}</label>
@@ -11,29 +11,46 @@
         </div>
         <span *ngIf="field.isEditable" class="md-inputfield">
           <div class="ui-g-8">
-            <textarea [id]="field.label" rows="1" cols="25" pInputTextarea autoResize="autoResize" [formControlName]="field.name">
-                        {{field.value}}
-                    </textarea>
+            <!-- <textarea [id]="field.name" rows="1" cols="25" pInputTextarea autoResize="autoResize" [(ngModel)]="field.value" [formControlName]="field.name">
+            </textarea> -->
+            <input [id]="field.name" [ngClass]="{'invalid' : !isValid(field), 'valid' : isValid(field)}" pInputText type="text" class="value"
+              [formControlName]="field.name" [(ngModel)]="field.value" />
           </div>
         </span>
       </div>
       <div class="ui-g" *ngSwitchCase="fieldUIType.BOOLEAN">
 
-        <div *ngIf="!(field.isEditable)" class="ui-g-8">
+        <!-- <div *ngIf="!(field.isEditable)" class="ui-g-8">
           <p-checkbox [id]="field.name" [(ngModel)]="field.value" binary="true" [ngModelOptions]="{standalone: true}" disabled=true></p-checkbox>
+        </div> -->
+        <div *ngIf="!(field.isEditable)" class="ui-g-8">
+          <span [id]="field.name">{{field.value ? 'true' : 'false'}}</span>
         </div>
         <div *ngIf="field.isEditable" class="ui-g-8">
-          <p-checkbox [id]="field.name" [(ngModel)]="field.value" binary="true" [formControlName]="field.name">
+          <p-checkbox [id]="field.name" [(ngModel)]="field.value" binary="true" [formControlName]="field.name" (onChange)=onUpdate()>
           </p-checkbox>
         </div>
       </div>
-      <div class="ui-g" *ngSwitchCase="fieldUIType.VALUE_LIST">
-        <div class="ui-g-4">
-          <label [attr.for]="field.name">{{field.label}}</label>
-        </div>
-        <div class="ui-g-8">
-          <p-listbox [id]="field.label" [style]="{'width':'250px'}" [options]="field.selectItems" [(ngModel)]="field.value" [formControlName]="field.name">
+      <div class="ui-g" *ngSwitchCase="fieldUIType.LIST">
+        <div *ngIf="!(field.isEditable)" class="ui-g-8">
+          <p-listbox [id]="field.label" [style]="{'width':'250px'}" [options]="field.selectItems" readonly="true">
           </p-listbox>
+        </div>
+        <div *ngIf="field.isEditable" class="ui-g-8">
+          <p-listbox [id]="field.name" [style]="{'width':'250px'}" [options]="field.selectItems" [(ngModel)]="field.value" [formControlName]="field.name"
+            (onChange)=onUpdate()>
+          </p-listbox>
+        </div>
+      </div>
+      <div class="ui-g" *ngSwitchCase="fieldUIType.RANGE">
+        <div *ngIf="!(field.isEditable)" class="ui-g-8">
+          <span [id]="field.name">{{field.value}}</span>
+        </div>
+        <div *ngIf="field.isEditable" class="ui-g-8">
+          <!-- <p align="center">{{field.possibleValues[0].value + ' - ' + field.possibleValues[field.possibleValues.length - 1].value }}</p> -->
+          <p-slider [id]="field.name" [(ngModel)]="field.valueIndex" [style]="{'width':'250px'}" (onChange)="onRangeUpdate($event, field)"
+            [step]="1" [min]="0" [max]="field.possibleValues.length - 1" [formControlName]="field.name"></p-slider>
+          <p align="center">{{field.possibleValues[field.valueIndex].value}}</p>
         </div>
       </div>
     </div>

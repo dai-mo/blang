@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core"
 import { CommonModule } from "@angular/common"
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms"
-import { CheckboxModule, ListboxModule } from "primeng/primeng"
+import { CheckboxModule, ListboxModule, SliderModule } from "primeng/primeng"
 
 @NgModule({
   imports: [
@@ -11,7 +11,8 @@ import { CheckboxModule, ListboxModule } from "primeng/primeng"
     FormsModule,
     ReactiveFormsModule,
     CheckboxModule,
-    ListboxModule
+    ListboxModule,
+    SliderModule
   ],
   declarations: [FieldsPanelComponent],
   exports: [FieldsPanelComponent]

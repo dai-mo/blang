@@ -1,10 +1,30 @@
 <p-tabView>
   <p-tabPanel *ngFor="let tab of tabs; let i = index" [header]="tab" [selected]="i == 0">
     <div [ngSwitch]="tab">
-      <div *ngSwitchCase="'Non Editable'" class="layout">
-        <h2>{{embeddedFieldGroup.label}}</h2>
-        <app-fields-panel [itemFieldGroup]="embeddedFieldGroup"></app-fields-panel>
+      <div *ngSwitchCase="'Non Editable Forms'" class="layout">
+        <h2>{{nonEditableFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="nonEditableFields"></app-fields-panel>
       </div>
+      <div *ngSwitchCase="'Batch Forms'" class="layout">
+        <h2>{{batchFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="batchFields"></app-fields-panel>
+        <p-button label="submit" (onClick)="submit($event, batchFields)"></p-button>
+      </div>
+      <div *ngSwitchCase="'Required Batch Forms'" class="layout">
+        <h2>{{requiredBatchFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="requiredBatchFields"></app-fields-panel>
+        <p-button label="submit" (onClick)="submit($event, requiredBatchFields)"></p-button>
+      </div>
+      <div *ngSwitchCase="'Reactive Forms'" class="layout">
+        <h2>{{editableReactiveFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="editableReactiveFields"></app-fields-panel>
+      </div>
+      <div *ngSwitchCase="'Required Reactive Forms'" class="layout">
+          <h2>{{requiredReactiveFields.label}}</h2>
+          <app-fields-panel [fieldGroup]="requiredReactiveFields"></app-fields-panel>
+        </div>
     </div>
   </p-tabPanel>
 </p-tabView>
+
+<p-growl></p-growl>

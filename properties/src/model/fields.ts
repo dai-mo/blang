@@ -1,4 +1,6 @@
+import { FormGroup, FormControl, Validators } from "@angular/forms"
 import { SelectItem } from "primeng/primeng"
+import { MessageService } from "primeng/components/common/messageservice"
 
 export enum FieldType {
   STRING,
@@ -11,7 +13,7 @@ export enum FieldUIType {
   UNKNOWN,
   TEXT,
   BOOLEAN,
-  VALUE_LIST,
+  LIST,
   RANGE
 }
 
@@ -46,9 +48,12 @@ export class Field {
   isEditable: boolean
   selectItems: SelectItem[]
   isRequired: boolean
+  level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField
+  isRange: boolean
+  valueIndex: number
+
   collector: () => any
   active = false
-  level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField
 
   static fieldType(type: string): FieldType {
     switch (type) {
@@ -72,7 +77,8 @@ export class Field {
     value: string | number | boolean = "",
     isEditable: boolean = false,
     isRequired: boolean = false,
-    level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField
+    level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField,
+    isRange: boolean = false
   ) {
     this.name = name
     this.label = label
@@ -80,9 +86,10 @@ export class Field {
     this.defaultValue = defaultValue
     this.possibleValues = possibleValues
     this.value = value
-    this.isEditable = isEditable
+    this.isRange = this.isEditable = isEditable
     this.isRequired = isRequired
     this.level = level
+    this.isRange = isRange
     this.resolveValue()
   }
 
@@ -95,11 +102,14 @@ export class Field {
       //        should have a default value and that too a default value that
       //        belongs to the list of possible values. We should ideally be able to
       //        accomodate both situations.
-      this.value = ""
+      // this.value = ""
       this.possibleValues = this.possibleValues.filter(pv => pv.value !== "")
       this.selectItems = this.possibleValues.map((pv: PossibleValue) => {
         return { label: pv.displayName, value: pv.value }
       })
+      this.valueIndex = this.possibleValues.findIndex(
+        (pv: PossibleValue) => pv.value === this.value
+      )
     }
   }
 
@@ -128,13 +138,19 @@ export class Field {
   }
 
   fieldUIType(): FieldUIType {
+    if (this.possibleValues.length > 0) {
+      if (this.isRange) return FieldUIType.RANGE
+      else return FieldUIType.LIST
+    }
+
     if (typeof this.value === "string") {
-      if (this.possibleValues.length > 0) return FieldUIType.VALUE_LIST
       return FieldUIType.TEXT
     }
+
     if (typeof this.value === "boolean") {
       return FieldUIType.BOOLEAN
     }
+
     return FieldUIType.UNKNOWN
   }
 
@@ -146,13 +162,25 @@ export class Field {
 export class FieldGroup {
   label: string
   fields: Field[] = []
+  isReactive: boolean
   active = false
   collector: () => any
+  submit: (data: any) => void
 
-  constructor(label: string, fields: Field[] = []) {
+  form: FormGroup
+
+  constructor(
+    label: string,
+    fields: Field[] = [],
+    isReactive: boolean = false,
+    submit: (data: any) => void = (data: any) => {}
+  ) {
     this.label = label
     if (fields === undefined) this.fields = []
     else this.fields = fields
+    this.isReactive = isReactive
+    this.form = this.toFormGroup(this.fields)
+    this.submit = submit
   }
 
   add(field: Field) {
@@ -161,6 +189,41 @@ export class FieldGroup {
 
   setCollector(collector: () => any) {
     this.collector = collector
+  }
+
+  doSubmit(messageService: MessageService, submit: (data: any) => any) {
+    let valid = true
+    for (const name in this.form.controls) {
+      if (this.form.controls[name].invalid) {
+        messageService.add({
+          severity: "warn",
+          summary: "Input Validation",
+          detail: name + " is invalid"
+        })
+        valid = false
+      }
+    }
+    if (valid) submit(this.collector())
+  }
+
+  doReactiveSubmit(messageService: MessageService) {
+    this.doSubmit(messageService, this.submit)
+  }
+
+  control(field: Field) {
+    return field.isRequired
+      ? new FormControl(field.value, Validators.required)
+      : new FormControl(field.value)
+  }
+
+  toFormGroup(fields: Field[]): FormGroup {
+    const group: any = {}
+
+    fields.filter((f: Field) => f.isEditable).forEach((field: Field) => {
+      group[field.name] = this.control(field)
+    })
+
+    return new FormGroup(group)
   }
 }
 
