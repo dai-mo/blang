@@ -64,18 +64,18 @@ export class AppComponent {
     )
   }
 
-  list(editable: boolean, required: boolean) {
+  list(value: string, editable: boolean, required: boolean) {
     return new Field(
       "list",
       "list",
       "list",
-      "ergo",
+      value,
       [
         new PossibleValue("Cogito", "Cogito", "Cogito"),
         new PossibleValue("ergo", "ergo", "ergo"),
         new PossibleValue("sum", "sum", "sum")
       ],
-      "ergo",
+      value,
       editable,
       required,
       FieldVisibilityLevel.OpenField
@@ -105,7 +105,7 @@ export class AppComponent {
     return new FieldGroup("Non Editable Field Group", [
       this.checkbox(false, true),
       this.text("Cogito ergo sum", false, true),
-      this.list(false, true),
+      this.list("ergo", false, true),
       this.range(false, true)
     ])
   }
@@ -114,7 +114,7 @@ export class AppComponent {
     return new FieldGroup("Editable Batch Field Group", [
       this.checkbox(true, false),
       this.text("Cogito ergo sum", true, false),
-      this.list(true, false),
+      this.list("ergo", true, false),
       this.range(true, false)
     ])
   }
@@ -125,7 +125,7 @@ export class AppComponent {
       [
         this.checkbox(true, false),
         this.text("Cogito ergo sum", true, false),
-        this.list(true, false),
+        this.list("ergo", true, false),
         this.range(true, false)
       ],
       true,
@@ -143,7 +143,7 @@ export class AppComponent {
     return new FieldGroup("Required Batch Fields", [
       this.checkbox(true, true),
       this.text("", true, true),
-      this.list(true, true),
+      this.list("", true, true),
       this.range(true, true)
     ])
   }
@@ -154,7 +154,7 @@ export class AppComponent {
       [
         this.checkbox(true, true),
         this.text("", true, true),
-        this.list(true, true),
+        this.list("", true, true),
         this.range(true, true)
       ],
       true,

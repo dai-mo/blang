@@ -9,7 +9,8 @@ import {
   SliderModule,
   ButtonModule,
   GrowlModule,
-  InputTextModule
+  InputTextModule,
+  DropdownModule
 } from "primeng/primeng"
 import { PropertiesModule } from "../../properties/src/public_api"
 import { MessageService } from "primeng/components/common/messageservice"
