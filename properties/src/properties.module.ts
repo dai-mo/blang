@@ -1,19 +1,48 @@
+import { ItemListDialogComponent } from "./dialog/item-list/item-list-dialog.component"
+import { ItemListPanelComponent } from "./panel/item-list/item-list-panel.component"
 import { FieldsPanelComponent } from "./panel/fields/fields-panel.component"
 import { NgModule } from "@angular/core"
 import { CommonModule } from "@angular/common"
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms"
-import { CheckboxModule, ListboxModule } from "primeng/primeng"
+import {
+  CheckboxModule,
+  ListboxModule,
+  SliderModule,
+  DropdownModule,
+  TabViewModule,
+  ButtonModule,
+  DialogModule
+} from "primeng/primeng"
+import { MessageService } from "primeng/components/common/messageservice"
+import { FlexLayoutModule } from "@angular/flex-layout"
 
 @NgModule({
   imports: [
     CommonModule,
+    TabViewModule,
+    ButtonModule,
     FormsModule,
     ReactiveFormsModule,
     CheckboxModule,
-    ListboxModule
+    ListboxModule,
+    DropdownModule,
+    SliderModule,
+    DialogModule,
+
+    // third party imports
+    FlexLayoutModule
   ],
-  declarations: [FieldsPanelComponent],
-  exports: [FieldsPanelComponent]
+  providers: [MessageService],
+  declarations: [
+    FieldsPanelComponent,
+    ItemListPanelComponent,
+    ItemListDialogComponent
+  ],
+  exports: [
+    FieldsPanelComponent,
+    ItemListPanelComponent,
+    ItemListDialogComponent
+  ]
 })
 export class PropertiesModule {}

@@ -1,6 +1,9 @@
 import { FieldGroup, Field, FieldUIType } from "../../model/fields"
 import { Component, OnInit, Input } from "@angular/core"
 import { FormGroup, FormControl, Validators } from "@angular/forms"
+import { MessageService } from "primeng/components/common/messageservice"
+
+import * as SI from "seamless-immutable"
 
 @Component({
   selector: "app-fields-panel",
@@ -8,31 +11,46 @@ import { FormGroup, FormControl, Validators } from "@angular/forms"
   styleUrls: ["./fields-panel.component.scss"]
 })
 export class FieldsPanelComponent implements OnInit {
-  @Input() itemFieldGroup: FieldGroup
+  @Input() fieldGroup: FieldGroup
   fields: Field[]
-  form: FormGroup
+
   fieldUIType = FieldUIType
 
+  constructor(private messageService: MessageService) {}
+
   collect = function(): any {
-    return this.form.value
+    // this.fields.filter((f: Field) => f.isRange).forEach((f: Field) => {
+    //   this.updateRange(f)
+    // })
+    let formValue = SI.from(this.fieldGroup.form.value)
+    this.fields
+      .filter((f: Field) => f.isRange)
+      .forEach(
+        (f: Field) =>
+          (formValue = formValue.set(
+            f.name,
+            f.possibleValues[this.fieldGroup.form.value[f.name]].value
+          ))
+      )
+    return formValue
   }.bind(this)
 
   ngOnInit() {
-    this.fields = this.itemFieldGroup.fields
-    this.itemFieldGroup.setCollector(this.collect)
-    this.form = this.toFormGroup(this.fields)
+    this.fields = this.fieldGroup.fields
+    this.fieldGroup.setCollector(this.collect)
   }
 
-  toFormGroup(fields: Field[]): FormGroup {
-    const group: any = {}
+  onUpdate() {
+    if (this.fieldGroup.isReactive)
+      this.fieldGroup.doReactiveSubmit(this.messageService)
+  }
 
-    fields.forEach((field: Field) => {
-      if (field.isEditable)
-        group[field.name] = field.isRequired
-          ? new FormControl(field.value, Validators.required)
-          : new FormControl(field.value)
-    })
+  onRangeUpdate(event: any, field: Field) {
+    if (this.fieldGroup.isReactive) this.onUpdate()
+  }
 
-    return new FormGroup(group)
+  isValid(field: Field): boolean {
+    if (!field.isEditable) return true
+    if (field.isRequired) return this.fieldGroup.form.controls[field.name].valid
   }
 }

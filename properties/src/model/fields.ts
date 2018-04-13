@@ -1,4 +1,7 @@
+import { FormGroup, FormControl, Validators } from "@angular/forms"
 import { SelectItem } from "primeng/primeng"
+import { MessageService } from "primeng/components/common/messageservice"
+import * as SI from "seamless-immutable"
 
 export enum FieldType {
   STRING,
@@ -9,10 +12,9 @@ export enum FieldType {
 
 export enum FieldUIType {
   UNKNOWN,
-  TEXT_NOT_EDITABLE,
-  TEXT_EDITABLE,
+  TEXT,
   BOOLEAN,
-  VALUE_LIST,
+  LIST,
   RANGE
 }
 
@@ -20,6 +22,16 @@ export class PossibleValue {
   value: string | number
   displayName: string
   description: string
+
+  constructor(
+    value: string | number,
+    displayName: string,
+    decscription: string
+  ) {
+    this.value = value
+    this.displayName = displayName
+    this.description = this.description
+  }
 }
 
 export enum FieldVisibilityLevel {
@@ -37,9 +49,12 @@ export class Field {
   isEditable: boolean
   selectItems: SelectItem[]
   isRequired: boolean
+  level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField
+  isRange: boolean
+  valueIndex: number
+
   collector: () => any
   active = false
-  level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField
 
   static fieldType(type: string): FieldType {
     switch (type) {
@@ -63,7 +78,8 @@ export class Field {
     value: string | number | boolean = "",
     isEditable: boolean = false,
     isRequired: boolean = false,
-    level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField
+    level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField,
+    isRange: boolean = false
   ) {
     this.name = name
     this.label = label
@@ -71,9 +87,10 @@ export class Field {
     this.defaultValue = defaultValue
     this.possibleValues = possibleValues
     this.value = value
-    this.isEditable = isEditable
+    this.isRange = this.isEditable = isEditable
     this.isRequired = isRequired
     this.level = level
+    this.isRange = isRange
     this.resolveValue()
   }
 
@@ -86,11 +103,14 @@ export class Field {
       //        should have a default value and that too a default value that
       //        belongs to the list of possible values. We should ideally be able to
       //        accomodate both situations.
-      this.value = ""
+      // this.value = ""
       this.possibleValues = this.possibleValues.filter(pv => pv.value !== "")
       this.selectItems = this.possibleValues.map((pv: PossibleValue) => {
         return { label: pv.displayName, value: pv.value }
       })
+      this.valueIndex = this.possibleValues.findIndex(
+        (pv: PossibleValue) => pv.value === this.value
+      )
     }
   }
 
@@ -119,14 +139,19 @@ export class Field {
   }
 
   fieldUIType(): FieldUIType {
-    if (typeof this.value === "string") {
-      if (this.possibleValues.length > 0) return FieldUIType.VALUE_LIST
-      if (!this.isEditable) return FieldUIType.TEXT_NOT_EDITABLE
-      return FieldUIType.TEXT_EDITABLE
+    if (this.possibleValues.length > 0) {
+      if (this.isRange) return FieldUIType.RANGE
+      else return FieldUIType.LIST
     }
+
+    if (typeof this.value === "string") {
+      return FieldUIType.TEXT
+    }
+
     if (typeof this.value === "boolean") {
       return FieldUIType.BOOLEAN
     }
+
     return FieldUIType.UNKNOWN
   }
 
@@ -138,13 +163,25 @@ export class Field {
 export class FieldGroup {
   label: string
   fields: Field[] = []
+  isReactive: boolean
   active = false
   collector: () => any
+  submit: (data: any) => void
 
-  constructor(label: string, fields: Field[] = []) {
+  form: FormGroup
+
+  constructor(
+    label: string,
+    fields: Field[] = [],
+    isReactive: boolean = false,
+    submit: (data: any) => void = (data: any) => {}
+  ) {
     this.label = label
     if (fields === undefined) this.fields = []
     else this.fields = fields
+    this.isReactive = isReactive
+    this.form = this.toFormGroup(this.fields)
+    this.submit = submit
   }
 
   add(field: Field) {
@@ -153,6 +190,45 @@ export class FieldGroup {
 
   setCollector(collector: () => any) {
     this.collector = collector
+  }
+
+  isValid(messageService: MessageService): boolean {
+    let valid = true
+    for (const name in this.form.controls) {
+      if (this.form.controls[name].invalid) {
+        messageService.add({
+          severity: "warn",
+          summary: "Input Validation",
+          detail: name + " is invalid"
+        })
+        valid = false
+      }
+    }
+    return valid
+  }
+
+  doSubmit(messageService: MessageService, submit: (data: any) => any) {
+    if (this.isValid(messageService)) submit(this.collector())
+  }
+
+  doReactiveSubmit(messageService: MessageService) {
+    this.doSubmit(messageService, this.submit)
+  }
+
+  control(field: Field) {
+    return field.isRequired
+      ? new FormControl(field.value, Validators.required)
+      : new FormControl(field.value)
+  }
+
+  toFormGroup(fields: Field[]): FormGroup {
+    const group: any = {}
+
+    fields.filter((f: Field) => f.isEditable).forEach((field: Field) => {
+      group[field.name] = this.control(field)
+    })
+
+    return new FormGroup(group)
   }
 }
 
@@ -170,9 +246,7 @@ export class Item {
   id: string
   name: string
   description: string
-  type: ItemType
   status: ItemStatus
-  state?: any
   fieldGroups: FieldGroup[]
   specificFields: Field[]
 
@@ -180,20 +254,16 @@ export class Item {
     id: string,
     name: string,
     description: string,
-    type: ItemType,
     status: ItemStatus = ItemStatus.OK,
     fieldGroups: FieldGroup[] = [],
-    specificFields: Field[] = [],
-    state?: any
+    specificFields: Field[] = []
   ) {
     this.id = id
     this.name = name
     this.description = description
-    this.type = type
     this.status = status
     this.fieldGroups = fieldGroups
     this.specificFields = specificFields
-    this.state = state
   }
 }
 
@@ -202,8 +272,11 @@ export abstract class ItemConf {
   items: Item[] = []
 
   hideCancel = false
+  showFirstItemOnly = false
 
-  constructor() {}
+  constructor(showFirstItemOnly = false) {
+    this.showFirstItemOnly = showFirstItemOnly
+  }
 
   list(): Item[] {
     return this.items
@@ -225,7 +298,7 @@ export abstract class ItemConf {
     return this.find(itemId).specificFields
   }
 
-  selectedEntitySpecificFields(): Field[] {
+  selectedItemSpecificFields(): Field[] {
     return this.specificFields(this.selectedItemId)
   }
 
@@ -234,7 +307,7 @@ export abstract class ItemConf {
   }
 
   isSelected(): boolean {
-    return this.selectedItemId !== undefined
+    return this.selectedItemId !== undefined || this.showFirstItemOnly
   }
 
   select(itemId: string): void {
@@ -243,12 +316,38 @@ export abstract class ItemConf {
 
     if (sefgs !== undefined && sefgs.length > 0) sefgs[0].active = true
     else {
-      const sesfs = this.selectedEntitySpecificFields()
+      const sesfs = this.selectedItemSpecificFields()
       if (sesfs !== undefined && sesfs.length > 0) sesfs[0].active = true
     }
   }
 
-  abstract finalise(data?: any): void
+  finalise(messageService: MessageService): void {
+    const sisfs = this.selectedItemSpecificFields()
+    const sifgs = this.selectedItemFieldGroups()
+
+    let allValid = true
+    sifgs.forEach((fg: FieldGroup) => {
+      allValid = fg.isValid(messageService)
+    })
+    if (!allValid) return
+
+    const initial: any = {}
+    let updatedProperties = SI.from(initial)
+
+    if (sisfs !== undefined && sisfs.length > 0)
+      sisfs.forEach(sisf => {
+        updatedProperties = updatedProperties.merge(sisf.collector())
+      })
+
+    if (sifgs !== undefined && sifgs.length > 0)
+      sifgs.forEach(sefg => {
+        updatedProperties = updatedProperties.merge(sefg.collector())
+      })
+
+    this.postFinalise(updatedProperties)
+  }
+
+  abstract postFinalise(data?: any): void
 
   abstract cancel(): void
 }
