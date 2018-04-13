@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -H 0.0.0.0 --disable-host-check",
+    "start": "ng serve -H 0.0.0.0 --disable-host-check --sourcemap",
     "pack-properties": "ng-packagr -p properties/package.json",
     "pack-all": "npm run pack-properties",
     "test": "ng test",

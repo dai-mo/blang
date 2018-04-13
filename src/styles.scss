@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "./assets/stylesheets/app.scss";
+
+@import "./assets/theme/theme-dark-green.css";
+@import "./assets/layout/css/layout-dark-green.css";
+
+html,
+body {
+  height: 100%;
+}
+
+.ui-dropdown .ui-dropdown-clear-icon {
+  display: none;
+}

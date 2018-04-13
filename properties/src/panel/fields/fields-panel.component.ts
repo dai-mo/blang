@@ -3,6 +3,8 @@ import { Component, OnInit, Input } from "@angular/core"
 import { FormGroup, FormControl, Validators } from "@angular/forms"
 import { MessageService } from "primeng/components/common/messageservice"
 
+import * as SI from "seamless-immutable"
+
 @Component({
   selector: "app-fields-panel",
   templateUrl: "./fields-panel.component.html",
@@ -17,10 +19,20 @@ export class FieldsPanelComponent implements OnInit {
   constructor(private messageService: MessageService) {}
 
   collect = function(): any {
-    this.fields.filter((f: Field) => f.isRange).forEach((f: Field) => {
-      this.updateRange(f)
-    })
-    return this.fieldGroup.form.value
+    // this.fields.filter((f: Field) => f.isRange).forEach((f: Field) => {
+    //   this.updateRange(f)
+    // })
+    let formValue = SI.from(this.fieldGroup.form.value)
+    this.fields
+      .filter((f: Field) => f.isRange)
+      .forEach(
+        (f: Field) =>
+          (formValue = formValue.set(
+            f.name,
+            f.possibleValues[this.fieldGroup.form.value[f.name]].value
+          ))
+      )
+    return formValue
   }.bind(this)
 
   ngOnInit() {
@@ -35,12 +47,6 @@ export class FieldsPanelComponent implements OnInit {
 
   onRangeUpdate(event: any, field: Field) {
     if (this.fieldGroup.isReactive) this.onUpdate()
-  }
-
-  private updateRange(field: Field) {
-    const index = this.fieldGroup.form.value[field.name]
-    field.value = field.possibleValues[index].value
-    this.fieldGroup.form.value[field.name] = field.value
   }
 
   isValid(field: Field): boolean {

@@ -20,9 +20,13 @@
         <app-fields-panel [fieldGroup]="editableReactiveFields"></app-fields-panel>
       </div>
       <div *ngSwitchCase="'Required Reactive Forms'" class="layout">
-          <h2>{{requiredReactiveFields.label}}</h2>
-          <app-fields-panel [fieldGroup]="requiredReactiveFields"></app-fields-panel>
-        </div>
+        <h2>{{editableReactiveFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="editableReactiveFields"></app-fields-panel>
+      </div>
+      <div *ngSwitchCase="'Item List'">
+        <h2>Multiple Field Group Items</h2>
+        <app-item-list-panel fxLayout="column" [itemConf]="sampleItemConf" [finaliseLabel]="'Submit'"></app-item-list-panel>
+      </div>
     </div>
   </p-tabPanel>
 </p-tabView>

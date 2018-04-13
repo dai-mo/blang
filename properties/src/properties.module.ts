@@ -1,5 +1,4 @@
-import { BrowserModule } from "@angular/platform-browser"
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
+import { ItemListPanelComponent } from "./panel/item-list/item-list-panel.component"
 import { FieldsPanelComponent } from "./panel/fields/fields-panel.component"
 import { NgModule } from "@angular/core"
 import { CommonModule } from "@angular/common"
@@ -9,21 +8,30 @@ import {
   CheckboxModule,
   ListboxModule,
   SliderModule,
-  DropdownModule
+  DropdownModule,
+  TabViewModule,
+  ButtonModule
 } from "primeng/primeng"
+import { MessageService } from "primeng/components/common/messageservice"
+import { FlexLayoutModule } from "@angular/flex-layout"
 
 @NgModule({
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
+    TabViewModule,
+    ButtonModule,
     FormsModule,
     ReactiveFormsModule,
     CheckboxModule,
     ListboxModule,
     DropdownModule,
-    SliderModule
+    SliderModule,
+
+    // third party imports
+    FlexLayoutModule
   ],
-  declarations: [FieldsPanelComponent],
-  exports: [FieldsPanelComponent]
+  providers: [MessageService],
+  declarations: [FieldsPanelComponent, ItemListPanelComponent],
+  exports: [FieldsPanelComponent, ItemListPanelComponent]
 })
 export class PropertiesModule {}

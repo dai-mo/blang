@@ -14,11 +14,13 @@ import {
 } from "primeng/primeng"
 import { PropertiesModule } from "../../properties/src/public_api"
 import { MessageService } from "primeng/components/common/messageservice"
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     PropertiesModule,
     TabViewModule,
     CheckboxModule,

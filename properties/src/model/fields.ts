@@ -1,6 +1,7 @@
 import { FormGroup, FormControl, Validators } from "@angular/forms"
 import { SelectItem } from "primeng/primeng"
 import { MessageService } from "primeng/components/common/messageservice"
+import * as SI from "seamless-immutable"
 
 export enum FieldType {
   STRING,
@@ -191,7 +192,7 @@ export class FieldGroup {
     this.collector = collector
   }
 
-  doSubmit(messageService: MessageService, submit: (data: any) => any) {
+  isValid(messageService: MessageService): boolean {
     let valid = true
     for (const name in this.form.controls) {
       if (this.form.controls[name].invalid) {
@@ -203,7 +204,11 @@ export class FieldGroup {
         valid = false
       }
     }
-    if (valid) submit(this.collector())
+    return valid
+  }
+
+  doSubmit(messageService: MessageService, submit: (data: any) => any) {
+    if (this.isValid(messageService)) submit(this.collector())
   }
 
   doReactiveSubmit(messageService: MessageService) {
@@ -241,9 +246,7 @@ export class Item {
   id: string
   name: string
   description: string
-  type: ItemType
   status: ItemStatus
-  state?: any
   fieldGroups: FieldGroup[]
   specificFields: Field[]
 
@@ -251,20 +254,16 @@ export class Item {
     id: string,
     name: string,
     description: string,
-    type: ItemType,
     status: ItemStatus = ItemStatus.OK,
     fieldGroups: FieldGroup[] = [],
-    specificFields: Field[] = [],
-    state?: any
+    specificFields: Field[] = []
   ) {
     this.id = id
     this.name = name
     this.description = description
-    this.type = type
     this.status = status
     this.fieldGroups = fieldGroups
     this.specificFields = specificFields
-    this.state = state
   }
 }
 
@@ -296,7 +295,7 @@ export abstract class ItemConf {
     return this.find(itemId).specificFields
   }
 
-  selectedEntitySpecificFields(): Field[] {
+  selectedItemSpecificFields(): Field[] {
     return this.specificFields(this.selectedItemId)
   }
 
@@ -314,12 +313,38 @@ export abstract class ItemConf {
 
     if (sefgs !== undefined && sefgs.length > 0) sefgs[0].active = true
     else {
-      const sesfs = this.selectedEntitySpecificFields()
+      const sesfs = this.selectedItemSpecificFields()
       if (sesfs !== undefined && sesfs.length > 0) sesfs[0].active = true
     }
   }
 
-  abstract finalise(data?: any): void
+  finalise(messageService: MessageService): void {
+    const sisfs = this.selectedItemSpecificFields()
+    const sifgs = this.selectedItemFieldGroups()
+
+    let allValid = true
+    sifgs.forEach((fg: FieldGroup) => {
+      allValid = fg.isValid(messageService)
+    })
+    if (!allValid) return
+
+    const initial: any = {}
+    let updatedProperties = SI.from(initial)
+
+    if (sisfs !== undefined && sisfs.length > 0)
+      sisfs.forEach(sisf => {
+        updatedProperties = updatedProperties.merge(sisf.collector())
+      })
+
+    if (sifgs !== undefined && sifgs.length > 0)
+      sifgs.forEach(sefg => {
+        updatedProperties = updatedProperties.merge(sefg.collector())
+      })
+
+    this.postFinalise(updatedProperties)
+  }
+
+  abstract postFinalise(data?: any): void
 
   abstract cancel(): void
 }

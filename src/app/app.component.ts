@@ -1,11 +1,16 @@
+import { ItemStatus } from "./../../properties/src/model/fields"
 import { MessageService } from "primeng/components/common/messageservice"
 import { Component } from "@angular/core"
 import {
   FieldGroup,
   Field,
   FieldVisibilityLevel,
-  PossibleValue
+  PossibleValue,
+  ItemConf,
+  Item
 } from "../../properties/src/public_api"
+
+import * as SI from "seamless-immutable"
 
 @Component({
   selector: "app-root",
@@ -18,6 +23,7 @@ export class AppComponent {
   editableReactiveFields: FieldGroup
   requiredBatchFields: FieldGroup
   requiredReactiveFields: FieldGroup
+  sampleItemConf: ItemConf
 
   tabs = [
     "Non Editable Forms",
@@ -25,22 +31,39 @@ export class AppComponent {
     "Reactive Forms",
     "Required Batch Forms",
     "Required Reactive Forms",
+    "Item List",
     "Dialogs"
   ]
 
   constructor(private messageService: MessageService) {
-    this.nonEditableFields = this.nonEditableFieldGroup()
-    this.batchFields = this.batchFieldGroup()
-    this.editableReactiveFields = this.editableReactiveFieldGroup()
-    this.requiredBatchFields = this.requiredBatchFieldGroup()
-    this.requiredReactiveFields = this.requiredReactiveFieldGroup()
+    const testData = new TestData(messageService)
+
+    this.nonEditableFields = testData.nonEditableFieldGroup()
+    this.batchFields = testData.batchFieldGroup()
+    this.editableReactiveFields = testData.editableReactiveFieldGroup()
+    this.requiredBatchFields = testData.requiredBatchFieldGroup()
+    this.requiredReactiveFields = testData.requiredReactiveFieldGroup()
+    this.sampleItemConf = testData.itemConfWithMultipleFieldGroups()
   }
 
-  checkbox(editable: boolean, required: boolean) {
+  submit(event: any, fieldGroup: FieldGroup) {
+    fieldGroup.doSubmit(this.messageService, (data: any) => {
+      this.messageService.add({
+        severity: "info",
+        summary: "Form Data",
+        detail: "<pre>" + JSON.stringify(data, null, 2) + "</pre>"
+      })
+    })
+  }
+}
+
+export class TestData {
+  constructor(private messageService: MessageService) {}
+  checkbox(editable: boolean, required: boolean, name: string = "checkbox") {
     return new Field(
-      "checkbox",
-      "checkbox",
-      "checkbox",
+      name,
+      name,
+      name,
       true,
       [],
       true,
@@ -50,11 +73,16 @@ export class AppComponent {
     )
   }
 
-  text(value: string, editable: boolean, required: boolean) {
+  text(
+    value: string,
+    editable: boolean,
+    required: boolean,
+    name: string = "text"
+  ) {
     return new Field(
-      "text",
-      "text",
-      "text",
+      name,
+      name,
+      name,
       value,
       [],
       value,
@@ -64,11 +92,16 @@ export class AppComponent {
     )
   }
 
-  list(value: string, editable: boolean, required: boolean) {
+  list(
+    value: string,
+    editable: boolean,
+    required: boolean,
+    name: string = "list"
+  ) {
     return new Field(
-      "list",
-      "list",
-      "list",
+      name,
+      name,
+      name,
       value,
       [
         new PossibleValue("Cogito", "Cogito", "Cogito"),
@@ -82,11 +115,11 @@ export class AppComponent {
     )
   }
 
-  range(editable: boolean, required: boolean) {
+  range(editable: boolean, required: boolean, name: string = "range") {
     return new Field(
-      "range",
-      "range",
-      "range",
+      name,
+      name,
+      name,
       "low",
       [
         new PossibleValue("low", "low", "low"),
@@ -139,12 +172,17 @@ export class AppComponent {
     )
   }
 
-  requiredBatchFieldGroup(): FieldGroup {
+  requiredBatchFieldGroup(
+    checkBoxName: string = "checkBox",
+    textName = "text",
+    listName = "list",
+    rangeName = "range"
+  ): FieldGroup {
     return new FieldGroup("Required Batch Fields", [
-      this.checkbox(true, true),
-      this.text("", true, true),
-      this.list("", true, true),
-      this.range(true, true)
+      this.checkbox(true, true, checkBoxName),
+      this.text("", true, true, textName),
+      this.list("", true, true, listName),
+      this.range(true, true, rangeName)
     ])
   }
 
@@ -153,7 +191,6 @@ export class AppComponent {
       "Required Reactive Fields",
       [
         this.checkbox(true, true),
-        this.text("", true, true),
         this.list("", true, true),
         this.range(true, true)
       ],
@@ -168,13 +205,55 @@ export class AppComponent {
     )
   }
 
-  submit(event: any, fieldGroup: FieldGroup) {
-    fieldGroup.doSubmit(this.messageService, (data: any) => {
-      this.messageService.add({
-        severity: "info",
-        summary: "Form Data",
-        detail: "<pre>" + JSON.stringify(data, null, 2) + "</pre>"
-      })
+  itemConfWithMultipleFieldGroups(): ItemConf {
+    return new SampleItemConf(this.messageService)
+  }
+}
+
+export class SampleItemConf extends ItemConf {
+  constructor(private messageService: MessageService) {
+    super()
+    this.items = this.fieldGroupItems()
+  }
+
+  fieldGroupItems(): Item[] {
+    const testData = new TestData(this.messageService)
+    let i = 0
+    const items: Item[] = []
+    for (i = 0; i < 15; i++) {
+      const name = "item" + i.toString()
+      const fg1 = testData.requiredBatchFieldGroup(
+        "checkboxA",
+        "textA",
+        "listA",
+        "rangeA"
+      )
+      fg1.label = i.toString() + " " + fg1.label
+      const fg2 = testData.requiredBatchFieldGroup(
+        "checkboxB",
+        "textB",
+        "listB",
+        "rangeB"
+      )
+      fg2.label = i.toString() + " " + fg2.label
+      items.push(new Item(name, name, name, ItemStatus.OK, [fg1, fg2]))
+    }
+    return items
+  }
+
+  postFinalise(data?: any): void {
+    this.messageService.add({
+      severity: "info",
+      summary: "Form Data",
+      detail: "<pre>" + JSON.stringify(data, null, 2) + "</pre>"
+    })
+  }
+
+  cancel(): void {
+    this.messageService.add({
+      severity: "info",
+      summary: "Form Data",
+      detail: "Submission Cancelled"
     })
   }
 }
