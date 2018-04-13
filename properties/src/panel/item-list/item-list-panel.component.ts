@@ -1,4 +1,10 @@
-import { FieldGroup, Field, ItemStatus, ItemConf } from "./../../model/fields"
+import {
+  FieldGroup,
+  Field,
+  ItemStatus,
+  Item,
+  ItemConf
+} from "./../../model/fields"
 
 import { Observable } from "rxjs/Observable"
 
@@ -30,7 +36,12 @@ export class ItemListPanelComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.itemConf !== undefined) {
-      this.itemConf.list().forEach(fe =>
+      let itemConfList: Item[]
+      if (this.itemConf.showFirstItemOnly) {
+        itemConfList = [this.itemConf.items[0]]
+        this.select(this.itemConf.items[0].id)
+      } else itemConfList = this.itemConf.list()
+      itemConfList.forEach(fe =>
         this.items.push({
           label: fe.name,
           value: {

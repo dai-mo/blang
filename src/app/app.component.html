@@ -29,6 +29,7 @@
       </div>
       <div *ngSwitchCase="'Dialogs'">
         <p-button label="Open Item List Dialog" (onClick)="openListDialog()"></p-button>
+        <p-button label="Open Single Item Dialog" (onClick)="openSingleItemDialog()"></p-button>
       </div>
     </div>
   </p-tabPanel>
@@ -38,3 +39,6 @@
 
 <app-item-list-dialog [dialogItemConf]="dialogListItemConf" [finaliseLabel]="'Submit'" [dialogHeader]="'Item List Dialog'"
   [isVisible]="dialogListItemConf.isItemListDialogVisible"></app-item-list-dialog>
+
+<app-item-list-dialog [dialogItemConf]="dialogSingleItemConf" [finaliseLabel]="'Submit'" [dialogHeader]="'Single Item Dialog'"
+  [isVisible]="dialogSingleItemConf.isItemDialogVisible"></app-item-list-dialog>

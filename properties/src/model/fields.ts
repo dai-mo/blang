@@ -272,8 +272,11 @@ export abstract class ItemConf {
   items: Item[] = []
 
   hideCancel = false
+  showFirstItemOnly = false
 
-  constructor() {}
+  constructor(showFirstItemOnly = false) {
+    this.showFirstItemOnly = showFirstItemOnly
+  }
 
   list(): Item[] {
     return this.items
@@ -304,7 +307,7 @@ export abstract class ItemConf {
   }
 
   isSelected(): boolean {
-    return this.selectedItemId !== undefined
+    return this.selectedItemId !== undefined || this.showFirstItemOnly
   }
 
   select(itemId: string): void {

@@ -25,6 +25,7 @@ export class AppComponent {
   requiredReactiveFields: FieldGroup
   listItemConf: SampleListItemConf
   dialogListItemConf: SampleDialogListItemConf
+  dialogSingleItemConf: SampleDialogSingleItemConf
 
   tabs = [
     "Non Editable Forms",
@@ -46,11 +47,21 @@ export class AppComponent {
     this.requiredReactiveFields = testData.requiredReactiveFieldGroup()
     this.listItemConf = new SampleListItemConf(this.messageService)
     this.dialogListItemConf = new SampleDialogListItemConf(this.messageService)
+    this.dialogSingleItemConf = new SampleDialogSingleItemConf(
+      this.messageService
+    )
   }
 
   openListDialog() {
     this.dialogListItemConf = new SampleDialogListItemConf(this.messageService)
     this.dialogListItemConf.isItemListDialogVisible = true
+  }
+
+  openSingleItemDialog() {
+    this.dialogSingleItemConf = new SampleDialogSingleItemConf(
+      this.messageService
+    )
+    this.dialogSingleItemConf.isItemDialogVisible = true
   }
 
   submit(event: any, fieldGroup: FieldGroup) {
@@ -218,25 +229,27 @@ export class TestData {
 }
 
 export class SampleListItemConf extends ItemConf {
+  testData: TestData
+
   constructor(private messageService: MessageService) {
     super()
+    this.testData = new TestData(this.messageService)
     this.items = this.fieldGroupItems()
   }
 
   fieldGroupItems(): Item[] {
-    const testData = new TestData(this.messageService)
     let i = 0
     const items: Item[] = []
     for (i = 0; i < 15; i++) {
       const name = "item" + i.toString()
-      const fg1 = testData.requiredBatchFieldGroup(
+      const fg1 = this.testData.requiredBatchFieldGroup(
         "checkboxA",
         "textA",
         "listA",
         "rangeA"
       )
       fg1.label = i.toString() + " " + fg1.label
-      const fg2 = testData.requiredBatchFieldGroup(
+      const fg2 = this.testData.requiredBatchFieldGroup(
         "checkboxB",
         "textB",
         "listB",
@@ -268,8 +281,50 @@ export class SampleListItemConf extends ItemConf {
 export class SampleDialogListItemConf extends SampleListItemConf {
   isItemListDialogVisible = false
 
+  postFinalise(data?: any): void {
+    this.isItemListDialogVisible = false
+    super.postFinalise(data)
+  }
+
   cancel(): void {
     this.isItemListDialogVisible = false
+    super.cancel()
+  }
+}
+
+export class SampleDialogSingleItemConf extends SampleListItemConf {
+  isItemDialogVisible = false
+
+  fieldGroupItems(): Item[] {
+    this.showFirstItemOnly = true
+    const items: Item[] = []
+
+    const fg1 = this.testData.requiredBatchFieldGroup(
+      "checkboxA",
+      "textA",
+      "listA",
+      "rangeA"
+    )
+
+    const fg2 = this.testData.requiredBatchFieldGroup(
+      "checkboxB",
+      "textB",
+      "listB",
+      "rangeB"
+    )
+
+    items.push(new Item(name, name, name, ItemStatus.OK, [fg1, fg2]))
+
+    return items
+  }
+
+  postFinalise(data?: any): void {
+    this.isItemDialogVisible = false
+    super.postFinalise(data)
+  }
+
+  cancel(): void {
+    this.isItemDialogVisible = false
     super.cancel()
   }
 }
