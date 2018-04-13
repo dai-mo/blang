@@ -13,3 +13,21 @@ body {
 .ui-dropdown .ui-dropdown-clear-icon {
   display: none;
 }
+
+.dialog-container .ui-dialog {
+  width: 55% !important;
+  height: 70% !important;
+  max-height: 580px !important;
+}
+
+.dialog-container .ui-dialog .ui-dialog-content {
+  height: calc(100% - 55px);
+}
+
+.ui-dialog-content .dialog-panel {
+  height: 100%;
+}
+
+.ui-widget-content {
+  border: none !important;
+}

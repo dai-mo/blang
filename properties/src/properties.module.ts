@@ -1,3 +1,4 @@
+import { ItemListDialogComponent } from "./dialog/item-list/item-list-dialog.component"
 import { ItemListPanelComponent } from "./panel/item-list/item-list-panel.component"
 import { FieldsPanelComponent } from "./panel/fields/fields-panel.component"
 import { NgModule } from "@angular/core"
@@ -10,7 +11,8 @@ import {
   SliderModule,
   DropdownModule,
   TabViewModule,
-  ButtonModule
+  ButtonModule,
+  DialogModule
 } from "primeng/primeng"
 import { MessageService } from "primeng/components/common/messageservice"
 import { FlexLayoutModule } from "@angular/flex-layout"
@@ -26,12 +28,21 @@ import { FlexLayoutModule } from "@angular/flex-layout"
     ListboxModule,
     DropdownModule,
     SliderModule,
+    DialogModule,
 
     // third party imports
     FlexLayoutModule
   ],
   providers: [MessageService],
-  declarations: [FieldsPanelComponent, ItemListPanelComponent],
-  exports: [FieldsPanelComponent, ItemListPanelComponent]
+  declarations: [
+    FieldsPanelComponent,
+    ItemListPanelComponent,
+    ItemListDialogComponent
+  ],
+  exports: [
+    FieldsPanelComponent,
+    ItemListPanelComponent,
+    ItemListDialogComponent
+  ]
 })
 export class PropertiesModule {}

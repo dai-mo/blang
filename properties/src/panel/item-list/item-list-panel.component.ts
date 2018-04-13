@@ -43,13 +43,17 @@ export class ItemListPanelComponent implements OnInit {
   }
 
   select(itemId: string) {
-    this.itemConf.select(itemId)
-    this.selectedItemFieldGroups = this.itemConf.fieldGroups(itemId)
-    this.selectedItemSpecificFields = this.itemConf.specificFields(itemId)
+    if (this.itemConf !== undefined) {
+      this.itemConf.select(itemId)
+      this.selectedItemFieldGroups = this.itemConf.fieldGroups(itemId)
+      this.selectedItemSpecificFields = this.itemConf.specificFields(itemId)
+    }
   }
 
   finalise() {
-    this.itemConf.finalise(this.messageService)
+    if (this.itemConf !== undefined) {
+      this.itemConf.finalise(this.messageService)
+    }
   }
 
   cancel() {

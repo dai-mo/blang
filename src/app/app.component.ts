@@ -23,7 +23,8 @@ export class AppComponent {
   editableReactiveFields: FieldGroup
   requiredBatchFields: FieldGroup
   requiredReactiveFields: FieldGroup
-  sampleItemConf: ItemConf
+  listItemConf: SampleListItemConf
+  dialogListItemConf: SampleDialogListItemConf
 
   tabs = [
     "Non Editable Forms",
@@ -43,7 +44,13 @@ export class AppComponent {
     this.editableReactiveFields = testData.editableReactiveFieldGroup()
     this.requiredBatchFields = testData.requiredBatchFieldGroup()
     this.requiredReactiveFields = testData.requiredReactiveFieldGroup()
-    this.sampleItemConf = testData.itemConfWithMultipleFieldGroups()
+    this.listItemConf = new SampleListItemConf(this.messageService)
+    this.dialogListItemConf = new SampleDialogListItemConf(this.messageService)
+  }
+
+  openListDialog() {
+    this.dialogListItemConf = new SampleDialogListItemConf(this.messageService)
+    this.dialogListItemConf.isItemListDialogVisible = true
   }
 
   submit(event: any, fieldGroup: FieldGroup) {
@@ -206,11 +213,11 @@ export class TestData {
   }
 
   itemConfWithMultipleFieldGroups(): ItemConf {
-    return new SampleItemConf(this.messageService)
+    return new SampleListItemConf(this.messageService)
   }
 }
 
-export class SampleItemConf extends ItemConf {
+export class SampleListItemConf extends ItemConf {
   constructor(private messageService: MessageService) {
     super()
     this.items = this.fieldGroupItems()
@@ -255,5 +262,14 @@ export class SampleItemConf extends ItemConf {
       summary: "Form Data",
       detail: "Submission Cancelled"
     })
+  }
+}
+
+export class SampleDialogListItemConf extends SampleListItemConf {
+  isItemListDialogVisible = false
+
+  cancel(): void {
+    this.isItemListDialogVisible = false
+    super.cancel()
   }
 }
