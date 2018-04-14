@@ -1,7 +1,6 @@
 import { FieldGroup, Field, FieldUIType } from "../../model/fields"
 import { Component, OnInit, Input } from "@angular/core"
 import { FormGroup, FormControl, Validators } from "@angular/forms"
-import { MessageService } from "primeng/components/common/messageservice"
 
 import * as SI from "seamless-immutable"
 
@@ -15,8 +14,6 @@ export class FieldsPanelComponent implements OnInit {
   fields: Field[]
 
   fieldUIType = FieldUIType
-
-  constructor(private messageService: MessageService) {}
 
   collect = function(): any {
     // this.fields.filter((f: Field) => f.isRange).forEach((f: Field) => {
@@ -41,8 +38,7 @@ export class FieldsPanelComponent implements OnInit {
   }
 
   onUpdate() {
-    if (this.fieldGroup.isReactive)
-      this.fieldGroup.doReactiveSubmit(this.messageService)
+    if (this.fieldGroup.isReactive) this.fieldGroup.doReactiveSubmit()
   }
 
   onRangeUpdate(event: any, field: Field) {

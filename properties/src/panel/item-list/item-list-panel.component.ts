@@ -11,8 +11,6 @@ import { Observable } from "rxjs/Observable"
 import { SelectItem } from "primeng/primeng"
 import { Component, OnInit, Input } from "@angular/core"
 
-import { MessageService } from "primeng/components/common/messageservice"
-
 // import { ItemConf, ItemStatus, FieldGroup, Field } from "../../model/fields"
 
 @Component({
@@ -30,7 +28,7 @@ export class ItemListPanelComponent implements OnInit {
   selectedItemFieldGroups: FieldGroup[]
   selectedItemSpecificFields: Field[]
 
-  constructor(private messageService: MessageService) {
+  constructor() {
     this.items = []
   }
 
@@ -63,7 +61,7 @@ export class ItemListPanelComponent implements OnInit {
 
   finalise() {
     if (this.itemConf !== undefined) {
-      this.itemConf.finalise(this.messageService)
+      this.itemConf.finalise()
     }
   }
 

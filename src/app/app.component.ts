@@ -65,7 +65,7 @@ export class AppComponent {
   }
 
   submit(event: any, fieldGroup: FieldGroup) {
-    fieldGroup.doSubmit(this.messageService, (data: any) => {
+    fieldGroup.doSubmit((data: any) => {
       this.messageService.add({
         severity: "info",
         summary: "Form Data",
@@ -77,6 +77,14 @@ export class AppComponent {
 
 export class TestData {
   constructor(private messageService: MessageService) {}
+
+  invalid = (name: string, data: any) =>
+    this.messageService.add({
+      severity: "warn",
+      summary: "Input Validation",
+      detail: name + " is invalid"
+    })
+
   checkbox(editable: boolean, required: boolean, name: string = "checkbox") {
     return new Field(
       name,
@@ -153,12 +161,16 @@ export class TestData {
   }
 
   nonEditableFieldGroup(): FieldGroup {
-    return new FieldGroup("Non Editable Field Group", [
-      this.checkbox(false, true),
-      this.text("Cogito ergo sum", false, true),
-      this.list("ergo", false, true),
-      this.range(false, true)
-    ])
+    return new FieldGroup(
+      "Non Editable Field Group",
+      [
+        this.checkbox(false, true),
+        this.text("Cogito ergo sum", false, true),
+        this.list("ergo", false, true),
+        this.range(false, true)
+      ],
+      this.invalid
+    )
   }
 
   batchFieldGroup(): FieldGroup {
@@ -167,7 +179,8 @@ export class TestData {
       this.text("Cogito ergo sum", true, false),
       this.list("ergo", true, false),
       this.range(true, false)
-    ])
+    ],
+    this.invalid)
   }
 
   editableReactiveFieldGroup(): FieldGroup {
@@ -179,6 +192,7 @@ export class TestData {
         this.list("ergo", true, false),
         this.range(true, false)
       ],
+      this.invalid,
       true,
       (data: any) => {
         this.messageService.add({
@@ -201,7 +215,8 @@ export class TestData {
       this.text("", true, true, textName),
       this.list("", true, true, listName),
       this.range(true, true, rangeName)
-    ])
+    ],
+    this.invalid)
   }
 
   requiredReactiveFieldGroup(): FieldGroup {
@@ -212,6 +227,7 @@ export class TestData {
         this.list("", true, true),
         this.range(true, true)
       ],
+      this.invalid,
       true,
       (data: any) => {
         this.messageService.add({

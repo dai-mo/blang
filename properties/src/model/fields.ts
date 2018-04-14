@@ -1,6 +1,5 @@
 import { FormGroup, FormControl, Validators } from "@angular/forms"
 import { SelectItem } from "primeng/primeng"
-import { MessageService } from "primeng/components/common/messageservice"
 import * as SI from "seamless-immutable"
 
 export enum FieldType {
@@ -167,12 +166,14 @@ export class FieldGroup {
   active = false
   collector: () => any
   submit: (data: any) => void
+  invalid: (key: string, data: any) => void
 
   form: FormGroup
 
   constructor(
     label: string,
     fields: Field[] = [],
+    invalid: (key: string, data: any) => void = (key: string, data: any) => {},
     isReactive: boolean = false,
     submit: (data: any) => void = (data: any) => {}
   ) {
@@ -182,6 +183,7 @@ export class FieldGroup {
     this.isReactive = isReactive
     this.form = this.toFormGroup(this.fields)
     this.submit = submit
+    this.invalid = invalid
   }
 
   add(field: Field) {
@@ -192,27 +194,29 @@ export class FieldGroup {
     this.collector = collector
   }
 
-  isValid(messageService: MessageService): boolean {
+  isValid(): boolean {
     let valid = true
-    for (const name in this.form.controls) {
-      if (this.form.controls[name].invalid) {
-        messageService.add({
-          severity: "warn",
-          summary: "Input Validation",
-          detail: name + " is invalid"
-        })
+    for (const name of Object.keys(this.form.controls)) {
+      const control = this.form.controls[name]
+      if (control.invalid) {
+        // messageService.add({
+        //   severity: "warn",
+        //   summary: "Input Validation",
+        //   detail: name + " is invalid"
+        // })
+        this.invalid(name, control.value)
         valid = false
       }
     }
     return valid
   }
 
-  doSubmit(messageService: MessageService, submit: (data: any) => any) {
-    if (this.isValid(messageService)) submit(this.collector())
+  doSubmit(submit: (data: any) => any) {
+    if (this.isValid()) submit(this.collector())
   }
 
-  doReactiveSubmit(messageService: MessageService) {
-    this.doSubmit(messageService, this.submit)
+  doReactiveSubmit() {
+    this.doSubmit(this.submit)
   }
 
   control(field: Field) {
@@ -321,13 +325,13 @@ export abstract class ItemConf {
     }
   }
 
-  finalise(messageService: MessageService): void {
+  finalise(): void {
     const sisfs = this.selectedItemSpecificFields()
     const sifgs = this.selectedItemFieldGroups()
 
     let allValid = true
     sifgs.forEach((fg: FieldGroup) => {
-      allValid = fg.isValid(messageService)
+      allValid = fg.isValid()
     })
     if (!allValid) return
 
