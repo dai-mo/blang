@@ -50,7 +50,7 @@ export class Field {
   isRequired: boolean
   level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField
   isRange: boolean
-  valueIndex: number
+  valueIndex = 0
 
   collector: () => any
   active = false
