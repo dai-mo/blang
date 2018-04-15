@@ -18,7 +18,7 @@ body {
 .dialog-container .ui-dialog {
   width: 55% !important;
   height: 70% !important;
-  max-height: 580px !important;
+  // max-height: 580px !important;
 }
 
 .dialog-container .ui-dialog .ui-dialog-content {
@@ -27,6 +27,7 @@ body {
 
 .ui-dialog-content .dialog-panel {
   height: 100%;
+  overflow: auto;
 }
 
 .ui-widget-content {

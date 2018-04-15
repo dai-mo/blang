@@ -26,6 +26,7 @@ export class AppComponent {
   listItemConf: SampleListItemConf
   dialogListItemConf: SampleDialogListItemConf
   dialogSingleItemConf: SampleDialogSingleItemConf
+  dialogSingleItemListConf: SampleDialogSingleItemListConf
 
   tabs = [
     "Non Editable Forms",
@@ -50,6 +51,9 @@ export class AppComponent {
     this.dialogSingleItemConf = new SampleDialogSingleItemConf(
       this.messageService
     )
+    this.dialogSingleItemListConf = new SampleDialogSingleItemListConf(
+      this.messageService
+    )
   }
 
   openListDialog() {
@@ -61,7 +65,14 @@ export class AppComponent {
     this.dialogSingleItemConf = new SampleDialogSingleItemConf(
       this.messageService
     )
-    this.dialogSingleItemConf.isItemDialogVisible = true
+    this.dialogSingleItemConf.isSingleItemDialogVisible = true
+  }
+
+  openSingleItemListDialog() {
+    this.dialogSingleItemListConf = new SampleDialogSingleItemListConf(
+      this.messageService
+    )
+    this.dialogSingleItemListConf.isSingleItemListDialogVisible = true
   }
 
   submit(event: any, fieldGroup: FieldGroup) {
@@ -174,13 +185,16 @@ export class TestData {
   }
 
   batchFieldGroup(): FieldGroup {
-    return new FieldGroup("Editable Batch Field Group", [
-      this.checkbox(true, false),
-      this.text("Cogito ergo sum", true, false),
-      this.list("ergo", true, false),
-      this.range(true, false)
-    ],
-    this.invalid)
+    return new FieldGroup(
+      "Editable Batch Field Group",
+      [
+        this.checkbox(true, false),
+        this.text("Cogito ergo sum", true, false),
+        this.list("ergo", true, false),
+        this.range(true, false)
+      ],
+      this.invalid
+    )
   }
 
   editableReactiveFieldGroup(): FieldGroup {
@@ -210,13 +224,16 @@ export class TestData {
     listName = "list",
     rangeName = "range"
   ): FieldGroup {
-    return new FieldGroup("Required Batch Fields", [
-      this.checkbox(true, true, checkBoxName),
-      this.text("", true, true, textName),
-      this.list("", true, true, listName),
-      this.range(true, true, rangeName)
-    ],
-    this.invalid)
+    return new FieldGroup(
+      "Required Batch Fields",
+      [
+        this.checkbox(true, true, checkBoxName),
+        this.text("", true, true, textName),
+        this.list("", true, true, listName),
+        this.range(true, true, rangeName)
+      ],
+      this.invalid
+    )
   }
 
   requiredReactiveFieldGroup(): FieldGroup {
@@ -309,7 +326,7 @@ export class SampleDialogListItemConf extends SampleListItemConf {
 }
 
 export class SampleDialogSingleItemConf extends SampleListItemConf {
-  isItemDialogVisible = false
+  isSingleItemDialogVisible = false
 
   fieldGroupItems(): Item[] {
     this.showFirstItemOnly = true
@@ -335,12 +352,44 @@ export class SampleDialogSingleItemConf extends SampleListItemConf {
   }
 
   postFinalise(data?: any): void {
-    this.isItemDialogVisible = false
+    this.isSingleItemDialogVisible = false
     super.postFinalise(data)
   }
 
   cancel(): void {
-    this.isItemDialogVisible = false
+    this.isSingleItemDialogVisible = false
+    super.cancel()
+  }
+}
+
+export class SampleDialogSingleItemListConf extends SampleListItemConf {
+  isSingleItemListDialogVisible = false
+
+  fieldGroupItems(): Item[] {
+    this.showFirstItemOnly = false
+    const items: Item[] = []
+
+    const name = "item"
+
+    const fg1 = this.testData.requiredBatchFieldGroup(
+      "checkboxA",
+      "textA",
+      "listA",
+      "rangeA"
+    )
+
+    items.push(new Item(name, name, name, ItemStatus.OK, [fg1]))
+
+    return items
+  }
+
+  postFinalise(data?: any): void {
+    this.isSingleItemListDialogVisible = false
+    super.postFinalise(data)
+  }
+
+  cancel(): void {
+    this.isSingleItemListDialogVisible = false
     super.cancel()
   }
 }
