@@ -4,7 +4,7 @@
   "license": "MIT",
   "ngPackage": {
     "$schema": "../node_modules/ng-packagr/ng-package.schema.json",
-    "dest": "../dist/blang-properties-0.1.0-SNAPSHOT",
+    "dest": "../ext/blang-properties-0.1.0-SNAPSHOT",
     "lib": {
       "entryFile": "src/public_api.ts"
     }
