@@ -18,3 +18,37 @@ pipeline:
       - ./node_modules
     volumes:
       - /tmp/cache:/cache
+  artifactory:
+    image: athieriot/drone-artifactory
+    environment:
+      - DRONE_VERSION=0.8
+    group_id: tech.brewlabs
+    artifact_id: tech.brewlabs.blang
+    version: 0.1.0-SNAPSHOT
+    files:
+      - package/*tar.gz
+    force_upload: true
+    secrets: [ artifactory_url, artifactory_username, artifactory_password ]
+    when:
+      branch: master
+      status: [ success ]
+  docker:
+    image: plugins/docker
+    repo: $IMAGE_REGISTRY/brewlabs.blang
+    registry: $IMAGE_REGISTRY
+    insecure: true
+    secrets: [ image_registry ]
+    tags:
+     - latest
+     - 0.1.0-dev
+    when:
+      branch: master
+      status: [ success ]
+
+  slack:
+    image: plugins/slack
+    channel: cados-builds
+    secrets: [ slack_webhook ]
+    when:
+      branch: master
+      status: [ success, failure ]
