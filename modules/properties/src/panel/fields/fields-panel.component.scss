@@ -1,10 +1,13 @@
 .value {
   width: 250px;
+}
+
+.center {
   text-align: center;
 }
 
-.value-padding {
-  padding: 5px;
+.field {
+  padding: 20px;
 }
 
 .ng-invalid {
@@ -13,4 +16,10 @@
 
 .ng-valid {
   border-color: black;
+}
+
+.read-only {
+  opacity: 1;
+  background-color: black !important;
+  border: none !important;
 }

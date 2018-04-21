@@ -48,6 +48,10 @@ body {
 }
 
 .mat-slider-thumb {
-  background-color: darkgreen !important;
+  background-color: #1ab394 !important;
+  border: none !important;
+}
+
+.ui-inputtext:disabled {
   border: none !important;
 }

@@ -1,4 +1,4 @@
-<button md-button class="router-link" [routerLink]="['/']">Home</button>
+<p-button label="Home" class="router-link" [routerLink]="['/']"></p-button>
 <p-tabView>
   <p-tabPanel *ngFor="let tab of tabs; let i = index" [header]="tab" [selected]="i == 0">
     <div [ngSwitch]="tab">
