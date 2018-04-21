@@ -1,4 +1,4 @@
-import { ItemStatus } from "./../../../properties/src/model/fields"
+import { ItemStatus } from "./../../../modules/properties/src/model/fields"
 import { MessageService } from "primeng/components/common/messageservice"
 import { Component } from "@angular/core"
 import {
@@ -8,7 +8,7 @@ import {
   PossibleValue,
   ItemConf,
   Item
-} from "../../../properties/src/public_api"
+} from "../../../modules/properties/src/public_api"
 
 import * as SI from "seamless-immutable"
 

@@ -16,9 +16,6 @@ export class FieldsPanelComponent implements OnInit {
   fieldUIType = FieldUIType
 
   collect = function(): any {
-    // this.fields.filter((f: Field) => f.isRange).forEach((f: Field) => {
-    //   this.updateRange(f)
-    // })
     let formValue = SI.from(this.fieldGroup.form.value)
     this.fields
       .filter((f: Field) => f.isRange)

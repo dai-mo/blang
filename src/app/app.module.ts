@@ -1,4 +1,3 @@
-import { ThreeModule } from "./../../viewer/three/src/three.module"
 import { MatSliderModule } from "@angular/material/slider"
 import { BrowserModule } from "@angular/platform-browser"
 import { NgModule } from "@angular/core"
@@ -14,33 +13,24 @@ import {
   InputTextModule,
   DropdownModule
 } from "primeng/primeng"
-import { PropertiesModule } from "../../properties/src/public_api"
+import { PropertiesModule } from "../../modules/properties/src/public_api"
 import { MessageService } from "primeng/components/common/messageservice"
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
 import { PropertiesComponent } from "./properties/properties.component"
 import { HomeComponent } from "./home/home.component"
 import { Routes, RouterModule } from "@angular/router"
 
-import { ThreeDemoComponent } from "./viewer/three-demo/three-demo.component"
-
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
-  { path: "properties", component: PropertiesComponent },
-  { path: "viewer-three", component: ThreeDemoComponent }
+  { path: "properties", component: PropertiesComponent }
 ]
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PropertiesComponent,
-    HomeComponent,
-    ThreeDemoComponent
-  ],
+  declarations: [AppComponent, PropertiesComponent, HomeComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     PropertiesModule,
-    ThreeModule,
     MatSliderModule,
     TabViewModule,
     CheckboxModule,
