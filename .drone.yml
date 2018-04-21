@@ -32,19 +32,6 @@ pipeline:
     when:
       branch: master
       status: [ success ]
-  docker:
-    image: plugins/docker
-    repo: $IMAGE_REGISTRY/brewlabs.blang
-    registry: $IMAGE_REGISTRY
-    insecure: true
-    secrets: [ image_registry ]
-    tags:
-     - latest
-     - 0.1.0-dev
-    when:
-      branch: master
-      status: [ success ]
-
   slack:
     image: plugins/slack
     channel: cados-builds
