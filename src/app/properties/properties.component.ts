@@ -1,4 +1,4 @@
-import { ItemStatus } from "./../../modules/properties/src/model/fields"
+import { ItemStatus } from "./../../../modules/properties/src/model/fields"
 import { MessageService } from "primeng/components/common/messageservice"
 import { Component } from "@angular/core"
 import {
@@ -8,16 +8,16 @@ import {
   PossibleValue,
   ItemConf,
   Item
-} from "../../modules/properties/src/public_api"
+} from "../../../modules/properties/src/public_api"
 
 import * as SI from "seamless-immutable"
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"]
+  selector: "app-properties",
+  templateUrl: "./properties.component.html",
+  styleUrls: ["./properties.component.scss"]
 })
-export class AppComponent {
+export class PropertiesComponent {
   nonEditableFields: FieldGroup
   batchFields: FieldGroup
   editableReactiveFields: FieldGroup

@@ -1,0 +1,5 @@
+<p-dialog *ngIf="isVisible" [(visible)]="isVisible" class="dialog-container" [header]="dialogHeader" modal="modal" [closable]="false"
+  [responsive]="true">
+  <input [style.display]="'none'" />
+  <app-item-list-panel class="dialog-panel" [itemConf]="dialogItemConf" [finaliseLabel]="finaliseLabel"></app-item-list-panel>
+</p-dialog>

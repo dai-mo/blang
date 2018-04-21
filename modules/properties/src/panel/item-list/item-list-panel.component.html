@@ -1,0 +1,23 @@
+<div fxLayout="row" fxLayoutGap="15px">
+  <div *ngIf="!itemConf.showFirstItemOnly" fxFlex="0 1 33%">
+    <p-listbox class="item-list" [options]="items" [(ngModel)]="selectedItemValue" (onChange)="select($event.value.id)" filter="filter"
+      [style]="{'width': '100%'}" [listStyle]="{'min-height': '300px', 'max-height': '300px'}">
+    </p-listbox>
+  </div>
+  <div *ngIf="itemConf.isSelected()" fxFlex="0 1 66%">
+    <p-tabView [style]="{'height': '340px'}">
+      <p-tabPanel *ngFor="let fieldGroup of itemConf.selectedItemFieldGroups()" [header]="fieldGroup.label" [selected]="fieldGroup.active">
+        <app-fields-panel [fieldGroup]="fieldGroup"></app-fields-panel>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>
+
+<p-footer>
+  <div class="ui-dialog-footer ui-widget-content ui-helper-clearfix footer">
+    <button pButton type="button" (click)="finalise()" [disabled]="!itemConf.isSelected()" label="{{finaliseLabel}}">
+    </button>
+    <button pButton type="button" (click)="cancel()" [hidden]="itemConf.hideCancel" label="Cancel">
+    </button>
+  </div>
+</p-footer>

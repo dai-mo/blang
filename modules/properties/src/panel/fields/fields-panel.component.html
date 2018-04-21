@@ -1,0 +1,52 @@
+<div>
+  <form [formGroup]="fieldGroup.form">
+    <div *ngFor="let field of fields" [ngSwitch]="field.fieldUIType()" class="value-padding">
+      <div class="ui-g-4">
+        <label [attr.for]="field.name">{{field.label}}</label>
+      </div>
+      <div>
+        <div class="ui-g" *ngSwitchCase="fieldUIType.TEXT">
+          <div *ngIf="!(field.isEditable)" class="ui-g-8">
+            <span [id]="field.name">{{field.value}}</span>
+          </div>
+          <div *ngIf="field.isEditable" class="ui-g-8">
+            <span class="md-inputfield">
+              <input [id]="field.name" pInputText type="text" class="value ui-inputtext ui-corner-all ui-state-default ui-widget" [formControlName]="field.name"
+                [(ngModel)]="field.value" />
+            </span>
+          </div>
+        </div>
+        <div class="ui-g" *ngSwitchCase="fieldUIType.BOOLEAN">
+          <div *ngIf="!(field.isEditable)" class="ui-g-8">
+            <span [id]="field.name">{{field.value ? 'true' : 'false'}}</span>
+          </div>
+          <div *ngIf="field.isEditable" class="ui-g-8">
+            <p-checkbox [id]="field.name" [(ngModel)]="field.value" binary="true" [formControlName]="field.name" (onChange)=onUpdate()>
+            </p-checkbox>
+          </div>
+        </div>
+        <div class="ui-g" *ngSwitchCase="fieldUIType.LIST">
+          <div *ngIf="!(field.isEditable)" class="ui-g-8">
+            <span [id]="field.name">{{field.value}}</span>
+          </div>
+          <div *ngIf="field.isEditable" class="ui-g-8">
+            <p-dropdown [id]="field.name" [style]="{'width':'250px'}" [options]="field.selectItems" [(ngModel)]="field.value" [formControlName]="field.name"
+              (onChange)=onUpdate() placeholder="Select ..." showClear="false"></p-dropdown>
+          </div>
+        </div>
+        <div class="ui-g" *ngSwitchCase="fieldUIType.RANGE">
+          <div *ngIf="!(field.isEditable)" class="ui-g-8">
+            <span [id]="field.name">{{field.value}}</span>
+          </div>
+          <div *ngIf="field.isEditable" class="ui-g-8">
+            <mat-slider [id]="field.name" [(ngModel)]="field.valueIndex" class="value" (change)="onRangeUpdate($event, field)" [step]="1"
+              [min]="0" [max]="field.possibleValues.length - 1" [tick-interval]="1" [formControlName]="field.name"></mat-slider>
+            <div class="value">
+              <span>{{field.possibleValues[field.valueIndex].value}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

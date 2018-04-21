@@ -1,1 +1,53 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "./assets/stylesheets/app.scss";
+
+@import "./assets/theme/theme-dark-green.css";
+@import "./assets/layout/css/layout-dark-green.css";
+@import "~@angular/material/prebuilt-themes/purple-green.css";
+
+html,
+body {
+  height: 100%;
+}
+
+.ui-dropdown .ui-dropdown-clear-icon {
+  display: none;
+}
+
+.ui-tabview,
+.ui-tabview-panel {
+  height: 100% !important;
+}
+
+.ui-tabview-panels {
+  height: calc(100% - 43px) !important;
+}
+
+.dialog-container .ui-dialog {
+  width: 55% !important;
+  height: 70% !important;
+  // max-height: 580px !important;
+}
+
+.dialog-container .ui-dialog .ui-dialog-content {
+  height: calc(100% - 55px);
+}
+
+.ui-dialog-content .dialog-panel {
+  height: 100%;
+  overflow: auto;
+}
+
+.ui-widget-content {
+  border: none !important;
+}
+
+.mat-slider-track-background {
+  background-color: gray !important;
+}
+
+.mat-slider-thumb {
+  background-color: darkgreen !important;
+  border: none !important;
+}

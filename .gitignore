@@ -45,3 +45,6 @@ Thumbs.db
 
 # Misc.
 .ng_pkg_build
+.vscode
+ext
+package

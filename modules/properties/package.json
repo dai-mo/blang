@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "license": "MIT",
   "ngPackage": {
-    "$schema": "../node_modules/ng-packagr/ng-package.schema.json",
-    "dest": "../dist/blang-properties-0.1.0-SNAPSHOT",
+    "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "../../package/blang-properties-0.1.0-SNAPSHOT",
     "lib": {
       "entryFile": "src/public_api.ts"
     }
