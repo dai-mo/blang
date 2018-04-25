@@ -1,3 +1,4 @@
+
 pipeline:
   restore-cache:
     image: drillster/drone-volume-cache
@@ -5,7 +6,7 @@ pipeline:
     mount:
       - ./node_modules
     volumes:
-      - /tmp/cache:/cache
+      - /tmp/cache:/cache:z
   build:
     image: node:9.11
     commands:
@@ -17,7 +18,7 @@ pipeline:
     mount:
       - ./node_modules
     volumes:
-      - /tmp/cache:/cache
+      - /tmp/cache:/cache:z
   artifactory:
     image: athieriot/drone-artifactory
     environment:
@@ -34,7 +35,7 @@ pipeline:
       status: [ success ]
   slack:
     image: plugins/slack
-    channel: cados-builds
+    channel: builds
     secrets: [ slack_webhook ]
     when:
       branch: master
