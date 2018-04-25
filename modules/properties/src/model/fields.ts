@@ -164,7 +164,7 @@ export class FieldGroup {
   fields: Field[] = []
   isReactive: boolean
   active = false
-  collector: () => any
+
   submit: (data: any) => void
   invalid: (key: string, data: any) => void
 
@@ -190,8 +190,18 @@ export class FieldGroup {
     this.fields.push(field)
   }
 
-  setCollector(collector: () => any) {
-    this.collector = collector
+  collect() {
+    let formValue = SI.from(this.form.value)
+    this.fields
+      .filter((f: Field) => f.isRange)
+      .forEach(
+        (f: Field) =>
+          (formValue = formValue.set(
+            f.name,
+            f.possibleValues[this.form.value[f.name]].value
+          ))
+      )
+    return formValue
   }
 
   isValid(): boolean {
@@ -212,7 +222,7 @@ export class FieldGroup {
   }
 
   doSubmit(submit: (data: any) => any) {
-    if (this.isValid()) submit(this.collector())
+    if (this.isValid()) submit(this.collect())
   }
 
   doReactiveSubmit() {
@@ -345,7 +355,7 @@ export abstract class ItemConf {
 
     if (sifgs !== undefined && sifgs.length > 0)
       sifgs.forEach(sefg => {
-        updatedProperties = updatedProperties.merge(sefg.collector())
+        updatedProperties = updatedProperties.merge(sefg.collect())
       })
 
     this.postFinalise(updatedProperties)

@@ -15,23 +15,8 @@ export class FieldsPanelComponent implements OnInit {
 
   fieldUIType = FieldUIType
 
-  collect = function(): any {
-    let formValue = SI.from(this.fieldGroup.form.value)
-    this.fields
-      .filter((f: Field) => f.isRange)
-      .forEach(
-        (f: Field) =>
-          (formValue = formValue.set(
-            f.name,
-            f.possibleValues[this.fieldGroup.form.value[f.name]].value
-          ))
-      )
-    return formValue
-  }.bind(this)
-
   ngOnInit() {
     this.fields = this.fieldGroup.fields
-    this.fieldGroup.setCollector(this.collect)
   }
 
   onUpdate() {
