@@ -1,3 +1,4 @@
+
 pipeline:
   restore-cache:
     image: drillster/drone-volume-cache
@@ -5,7 +6,7 @@ pipeline:
     mount:
       - ./node_modules
     volumes:
-      - /tmp/cache:/cache
+      - /tmp/cache:/cache:z
   build:
     image: node:9.11
     commands:
@@ -17,4 +18,25 @@ pipeline:
     mount:
       - ./node_modules
     volumes:
-      - /tmp/cache:/cache
+      - /tmp/cache:/cache:z
+  artifactory:
+    image: athieriot/drone-artifactory
+    environment:
+      - DRONE_VERSION=0.8
+    group_id: tech.brewlabs
+    artifact_id: tech.brewlabs.blang
+    version: 0.1.0-SNAPSHOT
+    files:
+      - package/*.tgz
+    force_upload: true
+    secrets: [ artifactory_url, artifactory_username, artifactory_password ]
+    when:
+      branch: master
+      status: [ success ]
+  slack:
+    image: plugins/slack
+    channel: builds
+    secrets: [ slack_webhook ]
+    when:
+      branch: master
+      status: [ success, failure ]

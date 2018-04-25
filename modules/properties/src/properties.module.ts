@@ -15,6 +15,8 @@ import {
   DialogModule
 } from "primeng/primeng"
 import { MessageService } from "primeng/components/common/messageservice"
+
+import { MatSliderModule } from "@angular/material/slider"
 import { FlexLayoutModule } from "@angular/flex-layout"
 
 @NgModule({
@@ -29,6 +31,9 @@ import { FlexLayoutModule } from "@angular/flex-layout"
     DropdownModule,
     SliderModule,
     DialogModule,
+
+    // Angular Material imports
+    MatSliderModule,
 
     // third party imports
     FlexLayoutModule

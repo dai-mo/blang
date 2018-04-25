@@ -4,6 +4,7 @@
 
 @import "./assets/theme/theme-dark-green.css";
 @import "./assets/layout/css/layout-dark-green.css";
+@import "~@angular/material/prebuilt-themes/purple-green.css";
 
 html,
 body {
@@ -14,10 +15,19 @@ body {
   display: none;
 }
 
+.ui-tabview,
+.ui-tabview-panel {
+  height: 100% !important;
+}
+
+.ui-tabview-panels {
+  height: calc(100% - 43px) !important;
+}
+
 .dialog-container .ui-dialog {
   width: 55% !important;
   height: 70% !important;
-  max-height: 580px !important;
+  // max-height: 580px !important;
 }
 
 .dialog-container .ui-dialog .ui-dialog-content {
@@ -26,8 +36,22 @@ body {
 
 .ui-dialog-content .dialog-panel {
   height: 100%;
+  overflow: auto;
 }
 
 .ui-widget-content {
+  border: none !important;
+}
+
+.mat-slider-track-background {
+  background-color: gray !important;
+}
+
+.mat-slider-thumb {
+  background-color: #1ab394 !important;
+  border: none !important;
+}
+
+.ui-inputtext:disabled {
   border: none !important;
 }

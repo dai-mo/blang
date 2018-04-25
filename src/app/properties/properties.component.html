@@ -1,0 +1,49 @@
+<p-button label="Home" class="router-link" [routerLink]="['/']"></p-button>
+<p-tabView>
+  <p-tabPanel *ngFor="let tab of tabs; let i = index" [header]="tab" [selected]="i == 0">
+    <div [ngSwitch]="tab">
+      <div *ngSwitchCase="'Non Editable Forms'" class="layout">
+        <h2>{{nonEditableFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="nonEditableFields"></app-fields-panel>
+      </div>
+      <div *ngSwitchCase="'Batch Forms'" class="layout">
+        <h2>{{batchFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="batchFields"></app-fields-panel>
+        <p-button label="submit" (onClick)="submit($event, batchFields)"></p-button>
+      </div>
+      <div *ngSwitchCase="'Required Batch Forms'" class="layout">
+        <h2>{{requiredBatchFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="requiredBatchFields"></app-fields-panel>
+        <p-button label="submit" (onClick)="submit($event, requiredBatchFields)"></p-button>
+      </div>
+      <div *ngSwitchCase="'Reactive Forms'" class="layout">
+        <h2>{{editableReactiveFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="editableReactiveFields"></app-fields-panel>
+      </div>
+      <div *ngSwitchCase="'Required Reactive Forms'" class="layout">
+        <h2>{{editableReactiveFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="editableReactiveFields"></app-fields-panel>
+      </div>
+      <div *ngSwitchCase="'Item List'">
+        <h2>Multiple Field Group Items</h2>
+        <app-item-list-panel fxLayout="column" [itemConf]="listItemConf" [finaliseLabel]="'Submit'"></app-item-list-panel>
+      </div>
+      <div *ngSwitchCase="'Dialogs'">
+        <p-button label="Open Item List Dialog" (onClick)="openListDialog()"></p-button>
+        <p-button label="Open Single Item Dialog" (onClick)="openSingleItemDialog()"></p-button>
+        <p-button label="Open Single Item List Dialog" (onClick)="openSingleItemListDialog()"></p-button>
+      </div>
+    </div>
+  </p-tabPanel>
+</p-tabView>
+
+<p-growl></p-growl>
+
+<app-item-list-dialog [dialogItemConf]="dialogListItemConf" [finaliseLabel]="'Submit'" [dialogHeader]="'Item List Dialog'"
+  [isVisible]="dialogListItemConf.isItemListDialogVisible"></app-item-list-dialog>
+
+<app-item-list-dialog [dialogItemConf]="dialogSingleItemConf" [finaliseLabel]="'Submit'" [dialogHeader]="'Single Item Dialog'"
+  [isVisible]="dialogSingleItemConf.isSingleItemDialogVisible"></app-item-list-dialog>
+
+<app-item-list-dialog [dialogItemConf]="dialogSingleItemListConf" [finaliseLabel]="'Submit'" [dialogHeader]="'Single Item List Dialog'"
+  [isVisible]="dialogSingleItemListConf.isSingleItemListDialogVisible"></app-item-list-dialog>
