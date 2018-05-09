@@ -3,6 +3,7 @@
   "version": "0.1.0-SNAPSHOT",
   "license": "MIT",
   "scripts": {
+    "version": "echo $npm_package_version",
     "ng": "ng",
     "start": "ng serve -H 0.0.0.0 --disable-host-check --sourcemap",
     "pack-properties": "ng-packagr -p modules/properties/package.json",

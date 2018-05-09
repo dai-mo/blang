@@ -21,6 +21,7 @@ export class PropertiesComponent {
   nonEditableFields: FieldGroup
   batchFields: FieldGroup
   editableReactiveFields: FieldGroup
+  mixedFields: FieldGroup
   requiredBatchFields: FieldGroup
   requiredReactiveFields: FieldGroup
   listItemConf: SampleListItemConf
@@ -32,6 +33,7 @@ export class PropertiesComponent {
     "Non Editable Forms",
     "Batch Forms",
     "Reactive Forms",
+    "Mixed Forms",
     "Required Batch Forms",
     "Required Reactive Forms",
     "Item List",
@@ -44,6 +46,7 @@ export class PropertiesComponent {
     this.nonEditableFields = testData.nonEditableFieldGroup()
     this.batchFields = testData.batchFieldGroup()
     this.editableReactiveFields = testData.editableReactiveFieldGroup()
+    this.mixedFields = testData.mixedFieldGroup()
     this.requiredBatchFields = testData.requiredBatchFieldGroup()
     this.requiredReactiveFields = testData.requiredReactiveFieldGroup()
     this.listItemConf = new SampleListItemConf(this.messageService)
@@ -215,6 +218,23 @@ export class TestData {
           detail: "<pre>" + JSON.stringify(data, null, 2) + "</pre>"
         })
       }
+    )
+  }
+
+  mixedFieldGroup(): FieldGroup {
+    return new FieldGroup(
+      "Editable Batch Field Group",
+      [
+        this.checkbox(false, false, "non-editable checkbox"),
+        this.checkbox(true, false),
+        this.text("Cogito ergo sum", false, false, "non-editable text"),
+        this.text("Cogito ergo sum", true, false),
+        this.list("ergo", false, false, "non-editable list"),
+        this.list("ergo", true, false),
+        this.range(false, false, "non-editable range"),
+        this.range(true, false)
+      ],
+      this.invalid
     )
   }
 
