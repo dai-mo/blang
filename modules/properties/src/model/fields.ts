@@ -193,7 +193,7 @@ export class FieldGroup {
   collect() {
     let formValue = SI.from(this.form.value)
     this.fields
-      .filter((f: Field) => f.isRange)
+      .filter((f: Field) => f.isRange && f.isEditable)
       .forEach(
         (f: Field) =>
           (formValue = formValue.set(
@@ -209,11 +209,6 @@ export class FieldGroup {
     for (const name of Object.keys(this.form.controls)) {
       const control = this.form.controls[name]
       if (control.invalid) {
-        // messageService.add({
-        //   severity: "warn",
-        //   summary: "Input Validation",
-        //   detail: name + " is invalid"
-        // })
         this.invalid(name, control.value)
         valid = false
       }
@@ -231,14 +226,17 @@ export class FieldGroup {
 
   control(field: Field) {
     return field.isRequired
-      ? new FormControl(field.value, Validators.required)
+      ? new FormControl(
+          { value: field.value, disabled: field.isEditable ? false : true },
+          Validators.required
+        )
       : new FormControl(field.value)
   }
 
   toFormGroup(fields: Field[]): FormGroup {
     const group: any = {}
 
-    fields.filter((f: Field) => f.isEditable).forEach((field: Field) => {
+    fields.forEach((field: Field) => {
       group[field.name] = this.control(field)
     })
 

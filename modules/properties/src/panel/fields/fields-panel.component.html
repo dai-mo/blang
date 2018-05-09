@@ -5,8 +5,8 @@
       <div *ngSwitchCase="fieldUIType.TEXT">
         <div *ngIf="!(field.isEditable)">
           <span class="ui-float-label">
-            <input [id]="field.name" pInputText type="text" class="value readonly ui-inputtext ui-state-filled" [(ngModel)]="field.value"
-              [ngModelOptions]="{standalone: true}" disabled=true />
+            <input [id]="field.name" pInputText type="text" class="value readonly ui-inputtext ui-state-filled" [formControlName]="field.name"
+              [(ngModel)]="field.value" />
             <label>{{ field.name }}</label>
           </span>
         </div>
@@ -20,8 +20,7 @@
       </div>
       <div *ngSwitchCase="fieldUIType.BOOLEAN">
         <div *ngIf="!(field.isEditable)">
-          <p-checkbox [id]="field.name" [(ngModel)]="field.value" binary="true" [label]="field.name" [ngModelOptions]="{standalone: true}"
-            disabled=true>
+          <p-checkbox [id]="field.name" [(ngModel)]="field.value" binary="true" [formControlName]="field.name" [label]="field.name">
           </p-checkbox>
         </div>
         <div *ngIf="field.isEditable">
@@ -34,7 +33,7 @@
         <div *ngIf="!(field.isEditable)">
           <span class="ui-float-label">
             <input [id]="field.name" pInputText type="text" class="value readonly ui-inputtext ui-state-filled" [(ngModel)]="field.value"
-              [ngModelOptions]="{standalone: true}" disabled=true />
+              [formControlName]="field.name" />
             <label>{{ field.name }}</label>
           </span>
         </div>
@@ -51,14 +50,14 @@
         <div *ngIf="!(field.isEditable)">
           <span class="ui-float-label">
             <input [id]="field.name" pInputText type="text" class="value readonly ui-inputtext ui-state-filled" [(ngModel)]="field.value"
-              [ngModelOptions]="{standalone: true}" disabled=true />
+              [formControlName]="field.name" />
             <label>{{ field.name }}</label>
           </span>
         </div>
         <div *ngIf="field.isEditable">
           <span class="ui-float-label">
             <input [id]="field.name" pInputText type="text" class="value readonly center ui-inputtext ui-state-filled" [(ngModel)]="field.possibleValues[field.valueIndex].value"
-              [ngModelOptions]="{standalone: true}" disabled=true />
+              [ngModelOptions]="{standalone: true}" />
             <label>{{ field.name }}</label>
           </span>
           <mat-slider [id]="field.name" [(ngModel)]="field.valueIndex" class="value" (change)="onRangeUpdate($event, field)" [step]="1"
