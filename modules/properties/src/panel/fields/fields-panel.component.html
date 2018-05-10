@@ -19,14 +19,22 @@
         </div>
       </div>
       <div *ngSwitchCase="fieldUIType.BOOLEAN">
+
         <div *ngIf="!(field.isEditable)">
-          <p-checkbox [id]="field.name" [(ngModel)]="field.value" binary="true" [formControlName]="field.name" [label]="field.label">
-          </p-checkbox>
+          <span class="ui-float-label">
+            <p-checkbox [id]="field.name" class="value readonly  ui-state-filled" [(ngModel)]="field.value" binary="true" [formControlName]="field.name">
+            </p-checkbox>
+            <label>{{ field.label }}</label>
+          </span>
         </div>
+
         <div *ngIf="field.isEditable">
-          <p-checkbox [id]="field.name" [(ngModel)]="field.value" binary="true" [formControlName]="field.name" [label]="field.label"
-            (onChange)=onUpdate()>
-          </p-checkbox>
+          <span class="ui-float-label">
+            <p-checkbox [id]="field.name" class="value ui-state-filled" [(ngModel)]="field.value" binary="true" [formControlName]="field.name"
+              (onChange)=onUpdate()>
+            </p-checkbox>
+            <label>{{ field.label }}</label>
+          </span>
         </div>
       </div>
       <div *ngSwitchCase="fieldUIType.LIST">
