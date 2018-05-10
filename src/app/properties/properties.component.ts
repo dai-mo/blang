@@ -223,7 +223,7 @@ export class TestData {
 
   mixedFieldGroup(): FieldGroup {
     return new FieldGroup(
-      "Editable Batch Field Group",
+      "Mixed Field Group",
       [
         this.checkbox(false, false, "non-editable checkbox"),
         this.checkbox(true, false),

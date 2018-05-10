@@ -185,13 +185,13 @@ export class FieldGroup {
     this.submit = submit
     this.invalid = invalid
   }
-
+  disabled = "true"
   add(field: Field) {
     this.fields.push(field)
   }
 
   collect() {
-    let formValue = SI.from(this.form.value)
+    let formValue = SI.from(this.form.getRawValue())
     this.fields
       .filter((f: Field) => f.isRange && f.isEditable)
       .forEach(
@@ -225,12 +225,13 @@ export class FieldGroup {
   }
 
   control(field: Field) {
+    const isDisabled = !field.isEditable
     return field.isRequired
       ? new FormControl(
-          { value: field.value, disabled: field.isEditable ? false : true },
+          { value: field.value, disabled: isDisabled },
           Validators.required
         )
-      : new FormControl(field.value)
+      : new FormControl({ value: field.value, disabled: isDisabled })
   }
 
   toFormGroup(fields: Field[]): FormGroup {
