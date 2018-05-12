@@ -47,8 +47,8 @@
         </div>
         <div *ngIf="field.isEditable">
           <span class="ui-float-label">
-            <p-dropdown [id]="field.name" [style]="{'width':'250px'}" [options]="field.selectItems" [(ngModel)]="field.value" [formControlName]="field.name"
-              (onChange)=onUpdate() placeholder="Select ..." showClear="false"></p-dropdown>
+            <p-dropdown [id]="field.name" [options]="field.selectItems" [(ngModel)]="field.value" [formControlName]="field.name" (onChange)=onUpdate()
+              placeholder="Select ..." showClear="false"></p-dropdown>
             <label>{{ field.label }}</label>
           </span>
         </div>
@@ -65,7 +65,7 @@
         <div *ngIf="field.isEditable">
           <span class="ui-float-label">
             <input [id]="field.name" pInputText type="text" class="value readonly center ui-inputtext ui-state-filled" [(ngModel)]="field.possibleValues[field.valueIndex].value"
-              [ngModelOptions]="{standalone: true}" />
+              [ngModelOptions]="{standalone: true}" disabled=true/>
             <label>{{ field.label }}</label>
           </span>
           <mat-slider [id]="field.name" [(ngModel)]="field.valueIndex" class="value" (change)="onRangeUpdate($event, field)" [step]="1"
