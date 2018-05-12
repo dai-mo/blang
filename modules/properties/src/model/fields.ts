@@ -198,7 +198,7 @@ export class FieldGroup {
           f.name,
           f.possibleValues[this.form.value[f.name]].value
         )
-      if (typeof f.value === "number")
+      else if (typeof f.value === "number")
         formValue = formValue.set(f.name, Number(f.value))
     })
     return formValue

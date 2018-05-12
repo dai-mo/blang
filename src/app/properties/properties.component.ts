@@ -174,7 +174,7 @@ export class TestData {
     )
   }
 
-  range(editable: boolean, required: boolean, name: string = "range") {
+  stringRange(editable: boolean, required: boolean, name: string = "range") {
     return new Field(
       name,
       name,
@@ -193,6 +193,29 @@ export class TestData {
     )
   }
 
+  numberRange(
+    editable: boolean,
+    required: boolean,
+    name: string = "number-range"
+  ) {
+    return new Field(
+      name,
+      name,
+      name,
+      5,
+      [
+        new PossibleValue(3, "low", "low"),
+        new PossibleValue(5, "medium", "medium"),
+        new PossibleValue(7, "high", "high")
+      ],
+      5,
+      editable,
+      required,
+      FieldVisibilityLevel.OpenField,
+      true
+    )
+  }
+
   nonEditableFieldGroup(): FieldGroup {
     return new FieldGroup(
       "Non Editable Field Group",
@@ -201,7 +224,7 @@ export class TestData {
         this.text("Cogito ergo sum", false, true),
         this.number(10, false, true),
         this.list("ergo", false, true),
-        this.range(false, true)
+        this.stringRange(false, true)
       ],
       this.invalid
     )
@@ -215,7 +238,8 @@ export class TestData {
         this.text("Cogito ergo sum", true, false),
         this.number(10, true, false),
         this.list("ergo", true, false),
-        this.range(true, false)
+        this.stringRange(true, false),
+        this.numberRange(true, false)
       ],
       this.invalid
     )
@@ -229,7 +253,7 @@ export class TestData {
         this.text("Cogito ergo sum", true, false),
         this.number(10, true, false),
         this.list("ergo", true, false),
-        this.range(true, false)
+        this.stringRange(true, false)
       ],
       this.invalid,
       true,
@@ -255,8 +279,8 @@ export class TestData {
         this.number(10, true, false),
         this.list("ergo", false, false, "non-editable list"),
         this.list("ergo", true, false),
-        this.range(false, false, "non-editable range"),
-        this.range(true, false)
+        this.stringRange(false, false, "non-editable range"),
+        this.stringRange(true, false)
       ],
       this.invalid
     )
@@ -276,7 +300,7 @@ export class TestData {
         this.text("", true, true, textName),
         this.number(10, true, true, numberName),
         this.list("", true, true, listName),
-        this.range(true, true, rangeName)
+        this.stringRange(true, true, rangeName)
       ],
       this.invalid
     )
@@ -288,7 +312,7 @@ export class TestData {
       [
         this.checkbox(true, true),
         this.list("", true, true),
-        this.range(true, true)
+        this.stringRange(true, true)
       ],
       this.invalid,
       true,
