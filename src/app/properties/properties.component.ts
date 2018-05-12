@@ -132,6 +132,25 @@ export class TestData {
     )
   }
 
+  number(
+    value: number,
+    editable: boolean,
+    required: boolean,
+    name: string = "number"
+  ) {
+    return new Field(
+      name,
+      name,
+      name,
+      value,
+      [],
+      value,
+      editable,
+      required,
+      FieldVisibilityLevel.OpenField
+    )
+  }
+
   list(
     value: string,
     editable: boolean,
@@ -180,6 +199,7 @@ export class TestData {
       [
         this.checkbox(false, true),
         this.text("Cogito ergo sum", false, true),
+        this.number(10, false, true),
         this.list("ergo", false, true),
         this.range(false, true)
       ],
@@ -193,6 +213,7 @@ export class TestData {
       [
         this.checkbox(true, false),
         this.text("Cogito ergo sum", true, false),
+        this.number(10, true, false),
         this.list("ergo", true, false),
         this.range(true, false)
       ],
@@ -206,6 +227,7 @@ export class TestData {
       [
         this.checkbox(true, false),
         this.text("Cogito ergo sum", true, false),
+        this.number(10, true, false),
         this.list("ergo", true, false),
         this.range(true, false)
       ],
@@ -229,6 +251,8 @@ export class TestData {
         this.checkbox(true, false),
         this.text("Cogito ergo sum", false, false, "non-editable text"),
         this.text("Cogito ergo sum", true, false),
+        this.number(10, false, false, "non-editable number"),
+        this.number(10, true, false),
         this.list("ergo", false, false, "non-editable list"),
         this.list("ergo", true, false),
         this.range(false, false, "non-editable range"),
@@ -241,6 +265,7 @@ export class TestData {
   requiredBatchFieldGroup(
     checkBoxName: string = "checkBox",
     textName = "text",
+    numberName = "number",
     listName = "list",
     rangeName = "range"
   ): FieldGroup {
@@ -249,6 +274,7 @@ export class TestData {
       [
         this.checkbox(true, true, checkBoxName),
         this.text("", true, true, textName),
+        this.number(10, true, true, numberName),
         this.list("", true, true, listName),
         this.range(true, true, rangeName)
       ],

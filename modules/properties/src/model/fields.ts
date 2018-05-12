@@ -143,7 +143,7 @@ export class Field {
       else return FieldUIType.LIST
     }
 
-    if (typeof this.value === "string") {
+    if (typeof this.value === "string" || typeof this.value === "number") {
       return FieldUIType.TEXT
     }
 
@@ -192,15 +192,15 @@ export class FieldGroup {
 
   collect() {
     let formValue = SI.from(this.form.getRawValue())
-    this.fields
-      .filter((f: Field) => f.isRange && f.isEditable)
-      .forEach(
-        (f: Field) =>
-          (formValue = formValue.set(
-            f.name,
-            f.possibleValues[this.form.value[f.name]].value
-          ))
-      )
+    this.fields.forEach((f: Field) => {
+      if (f.isRange && f.isEditable)
+        formValue = formValue.set(
+          f.name,
+          f.possibleValues[this.form.value[f.name]].value
+        )
+      if (typeof f.value === "number")
+        formValue = formValue.set(f.name, Number(f.value))
+    })
     return formValue
   }
 
