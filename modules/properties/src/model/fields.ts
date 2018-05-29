@@ -2,19 +2,12 @@ import { FormGroup, FormControl, Validators } from "@angular/forms"
 import { SelectItem } from "primeng/primeng"
 import * as SI from "seamless-immutable"
 
-export enum FieldType {
-  STRING,
-  NUMBER,
-  BOOLEAN,
-  UNKNOWN
-}
-
 export enum FieldUIType {
-  UNKNOWN,
-  TEXT,
-  BOOLEAN,
-  LIST,
-  RANGE
+  UNKNOWN = 0,
+  TEXT = 1,
+  BOOLEAN = 2,
+  LIST = 3,
+  RANGE = 4
 }
 
 export class PossibleValue {
@@ -54,19 +47,6 @@ export class Field {
 
   collector: () => any
   active = false
-
-  static fieldType(type: string): FieldType {
-    switch (type) {
-      case "STRING":
-        return FieldType.STRING
-      case "NUMBER":
-        return FieldType.NUMBER
-      case "BOOLEAN":
-        return FieldType.BOOLEAN
-      default:
-        return FieldType.UNKNOWN
-    }
-  }
 
   constructor(
     name: string,
@@ -137,7 +117,7 @@ export class Field {
     this.collector = collector
   }
 
-  fieldUIType(): FieldUIType {
+  fieldUIType(): number {
     if (this.possibleValues.length > 0) {
       if (this.isRange) return FieldUIType.RANGE
       else return FieldUIType.LIST
