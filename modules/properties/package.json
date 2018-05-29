@@ -6,7 +6,8 @@
     "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
     "dest": "../../package/blang-properties-0.1.0-SNAPSHOT",
     "lib": {
-      "entryFile": "src/public_api.ts"
+      "entryFile": "src/public_api.ts",
+      "styleIncludePaths": ["src/assets/styles"]
     }
   }
 }
