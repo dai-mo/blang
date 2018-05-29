@@ -48,7 +48,7 @@ export class Field {
   isEditable: boolean
   selectItems: SelectItem[]
   isRequired: boolean
-  level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField
+  level: number = FieldVisibilityLevel.ClosedField
   isRange: boolean
   valueIndex = 0
 
