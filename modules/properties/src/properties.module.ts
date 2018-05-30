@@ -1,3 +1,5 @@
+import { DynamicComponent } from "./dynamic/dynamic.component"
+import { DynamicDirective } from "./dynamic/dynamic.directive"
 import { ItemListDialogComponent } from "./dialog/item-list/item-list-dialog.component"
 import { ItemListPanelComponent } from "./panel/item-list/item-list-panel.component"
 import { FieldsPanelComponent } from "./panel/fields/fields-panel.component"
@@ -42,12 +44,14 @@ import { FlexLayoutModule } from "@angular/flex-layout"
   declarations: [
     FieldsPanelComponent,
     ItemListPanelComponent,
-    ItemListDialogComponent
+    ItemListDialogComponent,
+    DynamicDirective
   ],
   exports: [
     FieldsPanelComponent,
     ItemListPanelComponent,
-    ItemListDialogComponent
+    ItemListDialogComponent,
+    DynamicDirective
   ]
 })
 export class PropertiesModule {}

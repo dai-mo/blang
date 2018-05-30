@@ -1,3 +1,4 @@
+import { DynamicFieldsComponent } from "./dynamic/dynamic-fields/dynamic-fields.component"
 import { ItemStatus } from "./../../../modules/properties/src/model/fields"
 import { MessageService } from "primeng/components/common/messageservice"
 import { Component } from "@angular/core"
@@ -7,7 +8,8 @@ import {
   FieldVisibilityLevel,
   PossibleValue,
   ItemConf,
-  Item
+  Item,
+  DynamicItem
 } from "../../../modules/properties/src/public_api"
 
 import * as SI from "seamless-immutable"
@@ -28,6 +30,8 @@ export class PropertiesComponent {
   dialogListItemConf: SampleDialogListItemConf
   dialogSingleItemConf: SampleDialogSingleItemConf
   dialogSingleItemListConf: SampleDialogSingleItemListConf
+
+  dynamicItem: DynamicItem
 
   tabs = [
     "Non Editable Forms",
@@ -57,6 +61,8 @@ export class PropertiesComponent {
     this.dialogSingleItemListConf = new SampleDialogSingleItemListConf(
       this.messageService
     )
+
+    this.dynamicItem = new DynamicItem(DynamicFieldsComponent)
   }
 
   openListDialog() {
@@ -359,7 +365,12 @@ export class SampleListItemConf extends ItemConf {
         "rangeB"
       )
       fg2.label = i.toString() + " " + fg2.label
-      items.push(new Item(name, name, name, ItemStatus.OK, [fg1, fg2]))
+      const dynamicField = this.testData.text("", true, true, "dynamic-text")
+
+      dynamicField.setCollector(() => ({ dynamictext: dynamicField.value }))
+      items.push(
+        new Item(name, name, name, ItemStatus.OK, [fg1, fg2], [dynamicField])
+      )
     }
     return items
   }

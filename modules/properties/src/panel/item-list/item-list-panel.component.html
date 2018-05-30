@@ -9,6 +9,9 @@
       <p-tabPanel *ngFor="let fieldGroup of itemConf.selectedItemFieldGroups()" [header]="fieldGroup.label" [selected]="fieldGroup.active">
         <app-fields-panel [fieldGroup]="fieldGroup"></app-fields-panel>
       </p-tabPanel>
+      <p-tabPanel *ngFor="let field of itemConf.selectedItemSpecificFields()" [header]="field.label" [selected]="field.active">
+        <ng-template dynamic [data]="field"></ng-template>
+      </p-tabPanel>
     </p-tabView>
   </div>
 </div>

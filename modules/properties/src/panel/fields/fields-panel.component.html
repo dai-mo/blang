@@ -18,8 +18,8 @@
           </span>
         </div>
       </div>
-      <div *ngSwitchCase="fieldUIType.BOOLEAN">
 
+      <div *ngSwitchCase="fieldUIType.BOOLEAN">
         <div *ngIf="!(field.isEditable)">
           <span class="ui-float-label">
             <p-checkbox [id]="field.name" class="value readonly  ui-state-filled" [(ngModel)]="field.value" binary="true" [formControlName]="field.name">
@@ -75,5 +75,6 @@
       </div>
 
     </div>
+
   </form>
 </div>
