@@ -3,6 +3,7 @@
   "version": "0.1.0-SNAPSHOT",
   "license": "MIT",
   "scripts": {
+    "version": "echo $npm_package_version",
     "ng": "ng",
     "start": "ng serve -H 0.0.0.0 --disable-host-check --sourcemap",
     "pack-properties": "ng-packagr -p modules/properties/package.json",
@@ -62,6 +63,7 @@
     "ng-packagr": "^2.4.2",
     "protractor": "5.1.2",
     "ts-node": "3.2.0",
+    "node-sass": "4.9.0",
     "tslint": "5.7.0",
     "typescript": "2.4.2"
   }

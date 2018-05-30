@@ -2,19 +2,12 @@ import { FormGroup, FormControl, Validators } from "@angular/forms"
 import { SelectItem } from "primeng/primeng"
 import * as SI from "seamless-immutable"
 
-export enum FieldType {
-  STRING,
-  NUMBER,
-  BOOLEAN,
-  UNKNOWN
-}
-
 export enum FieldUIType {
-  UNKNOWN,
-  TEXT,
-  BOOLEAN,
-  LIST,
-  RANGE
+  UNKNOWN = 0,
+  TEXT = 1,
+  BOOLEAN = 2,
+  LIST = 3,
+  RANGE = 4
 }
 
 export class PossibleValue {
@@ -48,25 +41,12 @@ export class Field {
   isEditable: boolean
   selectItems: SelectItem[]
   isRequired: boolean
-  level: FieldVisibilityLevel = FieldVisibilityLevel.ClosedField
+  level: number = FieldVisibilityLevel.ClosedField
   isRange: boolean
   valueIndex = 0
 
   collector: () => any
   active = false
-
-  static fieldType(type: string): FieldType {
-    switch (type) {
-      case "STRING":
-        return FieldType.STRING
-      case "NUMBER":
-        return FieldType.NUMBER
-      case "BOOLEAN":
-        return FieldType.BOOLEAN
-      default:
-        return FieldType.UNKNOWN
-    }
-  }
 
   constructor(
     name: string,
@@ -137,13 +117,13 @@ export class Field {
     this.collector = collector
   }
 
-  fieldUIType(): FieldUIType {
+  fieldUIType(): number {
     if (this.possibleValues.length > 0) {
       if (this.isRange) return FieldUIType.RANGE
       else return FieldUIType.LIST
     }
 
-    if (typeof this.value === "string") {
+    if (typeof this.value === "string" || typeof this.value === "number") {
       return FieldUIType.TEXT
     }
 
@@ -186,21 +166,17 @@ export class FieldGroup {
     this.invalid = invalid
   }
 
-  add(field: Field) {
-    this.fields.push(field)
-  }
-
   collect() {
-    let formValue = SI.from(this.form.value)
-    this.fields
-      .filter((f: Field) => f.isRange)
-      .forEach(
-        (f: Field) =>
-          (formValue = formValue.set(
-            f.name,
-            f.possibleValues[this.form.value[f.name]].value
-          ))
-      )
+    let formValue = SI.from(this.form.getRawValue())
+    this.fields.forEach((f: Field) => {
+      if (f.isRange && f.isEditable)
+        formValue = formValue.set(
+          f.name,
+          f.possibleValues[this.form.value[f.name]].value
+        )
+      else if (typeof f.value === "number")
+        formValue = formValue.set(f.name, Number(f.value))
+    })
     return formValue
   }
 
@@ -209,11 +185,6 @@ export class FieldGroup {
     for (const name of Object.keys(this.form.controls)) {
       const control = this.form.controls[name]
       if (control.invalid) {
-        // messageService.add({
-        //   severity: "warn",
-        //   summary: "Input Validation",
-        //   detail: name + " is invalid"
-        // })
         this.invalid(name, control.value)
         valid = false
       }
@@ -230,15 +201,19 @@ export class FieldGroup {
   }
 
   control(field: Field) {
+    const isDisabled = !field.isEditable
     return field.isRequired
-      ? new FormControl(field.value, Validators.required)
-      : new FormControl(field.value)
+      ? new FormControl(
+          { value: field.value, disabled: isDisabled },
+          Validators.required
+        )
+      : new FormControl({ value: field.value, disabled: isDisabled })
   }
 
   toFormGroup(fields: Field[]): FormGroup {
     const group: any = {}
 
-    fields.filter((f: Field) => f.isEditable).forEach((field: Field) => {
+    fields.forEach((field: Field) => {
       group[field.name] = this.control(field)
     })
 
@@ -263,6 +238,7 @@ export class Item {
   status: ItemStatus
   fieldGroups: FieldGroup[]
   specificFields: Field[]
+  state: any
 
   constructor(
     id: string,
@@ -270,7 +246,8 @@ export class Item {
     description: string,
     status: ItemStatus = ItemStatus.OK,
     fieldGroups: FieldGroup[] = [],
-    specificFields: Field[] = []
+    specificFields: Field[] = [],
+    state: any = {}
   ) {
     this.id = id
     this.name = name
@@ -278,6 +255,7 @@ export class Item {
     this.status = status
     this.fieldGroups = fieldGroups
     this.specificFields = specificFields
+    this.state = state
   }
 }
 
@@ -304,12 +282,22 @@ export abstract class ItemConf {
     return this.find(itemId).fieldGroups
   }
 
+  addFieldGroups(itemId: string, fieldGroups: FieldGroup[]) {
+    const item = this.find(itemId)
+    if (item !== undefined) item.fieldGroups.push(...fieldGroups)
+  }
+
   selectedItemFieldGroups(): FieldGroup[] {
     return this.fieldGroups(this.selectedItemId)
   }
 
   specificFields(itemId: string): Field[] {
     return this.find(itemId).specificFields
+  }
+
+  addSpecificFields(itemId: string, specificFields: Field[]) {
+    const item = this.find(itemId)
+    if (item !== undefined) item.specificFields.push(...specificFields)
   }
 
   selectedItemSpecificFields(): Field[] {

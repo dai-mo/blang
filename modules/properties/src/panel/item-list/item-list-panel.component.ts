@@ -9,18 +9,36 @@ import {
 import { Observable } from "rxjs/Observable"
 
 import { SelectItem } from "primeng/primeng"
-import { Component, OnInit, Input } from "@angular/core"
-
-// import { ItemConf, ItemStatus, FieldGroup, Field } from "../../model/fields"
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef
+} from "@angular/core"
+import { DynamicItem } from "../../dynamic/dynamic-item"
+import { DynamicDirective } from "../../dynamic/dynamic.directive"
+import { DynamicService } from "../../dynamic/dynamic.service"
 
 @Component({
   selector: "app-item-list-panel",
   templateUrl: "./item-list-panel.component.html",
   styleUrls: ["./item-list-panel.component.scss"]
 })
-export class ItemListPanelComponent implements OnInit {
+export class ItemListPanelComponent implements OnInit, AfterViewInit {
   @Input() itemConf: ItemConf
   @Input() finaliseLabel: string
+  @Input() dynamicItem: DynamicItem
+
+  dynamicDirective: DynamicDirective
+  @ViewChild(DynamicDirective)
+  set content(dynamicDirective: DynamicDirective) {
+    this.dynamicDirective = dynamicDirective
+    const dd = this.dynamicDirective
+    this.dynamicService.loadComponent(this.dynamicItem, this.dynamicDirective)
+    this.changeDetectorRef.detectChanges()
+  }
 
   private itemStatus = ItemStatus
   items: SelectItem[]
@@ -28,7 +46,10 @@ export class ItemListPanelComponent implements OnInit {
   selectedItemFieldGroups: FieldGroup[]
   selectedItemSpecificFields: Field[]
 
-  constructor() {
+  constructor(
+    private dynamicService: DynamicService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
     this.items = []
   }
 
@@ -50,6 +71,8 @@ export class ItemListPanelComponent implements OnInit {
       )
     }
   }
+
+  ngAfterViewInit(): void {}
 
   select(itemId: string) {
     if (this.itemConf !== undefined) {

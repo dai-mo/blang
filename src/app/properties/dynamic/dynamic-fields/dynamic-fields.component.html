@@ -1,0 +1,16 @@
+<div [ngSwitch]="data.fieldUIType()" class="field">
+  <div *ngSwitchCase="fieldUIType.TEXT">
+    <div *ngIf="!(data.isEditable)">
+      <span class="ui-float-label">
+        <input pInputText type="text" class="value readonly ui-inputtext ui-state-filled" [(ngModel)]="data.value" />
+        <label>{{ data.label }}</label>
+      </span>
+    </div>
+    <div *ngIf="data.isEditable">
+      <span class="ui-float-label">
+        <input pInputText type="text" class="value ui-inputtext ui-state-filled" [(ngModel)]="data.value" />
+        <label>{{ data.label }}</label>
+      </span>
+    </div>
+  </div>
+</div>

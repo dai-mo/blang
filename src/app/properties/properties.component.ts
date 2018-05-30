@@ -1,3 +1,4 @@
+import { DynamicFieldsComponent } from "./dynamic/dynamic-fields/dynamic-fields.component"
 import { ItemStatus } from "./../../../modules/properties/src/model/fields"
 import { MessageService } from "primeng/components/common/messageservice"
 import { Component } from "@angular/core"
@@ -7,7 +8,8 @@ import {
   FieldVisibilityLevel,
   PossibleValue,
   ItemConf,
-  Item
+  Item,
+  DynamicItem
 } from "../../../modules/properties/src/public_api"
 
 import * as SI from "seamless-immutable"
@@ -21,6 +23,7 @@ export class PropertiesComponent {
   nonEditableFields: FieldGroup
   batchFields: FieldGroup
   editableReactiveFields: FieldGroup
+  mixedFields: FieldGroup
   requiredBatchFields: FieldGroup
   requiredReactiveFields: FieldGroup
   listItemConf: SampleListItemConf
@@ -28,10 +31,13 @@ export class PropertiesComponent {
   dialogSingleItemConf: SampleDialogSingleItemConf
   dialogSingleItemListConf: SampleDialogSingleItemListConf
 
+  dynamicItem: DynamicItem
+
   tabs = [
     "Non Editable Forms",
     "Batch Forms",
     "Reactive Forms",
+    "Mixed Forms",
     "Required Batch Forms",
     "Required Reactive Forms",
     "Item List",
@@ -44,6 +50,7 @@ export class PropertiesComponent {
     this.nonEditableFields = testData.nonEditableFieldGroup()
     this.batchFields = testData.batchFieldGroup()
     this.editableReactiveFields = testData.editableReactiveFieldGroup()
+    this.mixedFields = testData.mixedFieldGroup()
     this.requiredBatchFields = testData.requiredBatchFieldGroup()
     this.requiredReactiveFields = testData.requiredReactiveFieldGroup()
     this.listItemConf = new SampleListItemConf(this.messageService)
@@ -54,6 +61,8 @@ export class PropertiesComponent {
     this.dialogSingleItemListConf = new SampleDialogSingleItemListConf(
       this.messageService
     )
+
+    this.dynamicItem = new DynamicItem(DynamicFieldsComponent)
   }
 
   openListDialog() {
@@ -129,6 +138,25 @@ export class TestData {
     )
   }
 
+  number(
+    value: number,
+    editable: boolean,
+    required: boolean,
+    name: string = "number"
+  ) {
+    return new Field(
+      name,
+      name,
+      name,
+      value,
+      [],
+      value,
+      editable,
+      required,
+      FieldVisibilityLevel.OpenField
+    )
+  }
+
   list(
     value: string,
     editable: boolean,
@@ -152,7 +180,7 @@ export class TestData {
     )
   }
 
-  range(editable: boolean, required: boolean, name: string = "range") {
+  stringRange(editable: boolean, required: boolean, name: string = "range") {
     return new Field(
       name,
       name,
@@ -171,14 +199,38 @@ export class TestData {
     )
   }
 
+  numberRange(
+    editable: boolean,
+    required: boolean,
+    name: string = "number-range"
+  ) {
+    return new Field(
+      name,
+      name,
+      name,
+      5,
+      [
+        new PossibleValue(3, "low", "low"),
+        new PossibleValue(5, "medium", "medium"),
+        new PossibleValue(7, "high", "high")
+      ],
+      5,
+      editable,
+      required,
+      FieldVisibilityLevel.OpenField,
+      true
+    )
+  }
+
   nonEditableFieldGroup(): FieldGroup {
     return new FieldGroup(
       "Non Editable Field Group",
       [
         this.checkbox(false, true),
         this.text("Cogito ergo sum", false, true),
+        this.number(10, false, true),
         this.list("ergo", false, true),
-        this.range(false, true)
+        this.stringRange(false, true)
       ],
       this.invalid
     )
@@ -190,8 +242,10 @@ export class TestData {
       [
         this.checkbox(true, false),
         this.text("Cogito ergo sum", true, false),
+        this.number(10, true, false),
         this.list("ergo", true, false),
-        this.range(true, false)
+        this.stringRange(true, false),
+        this.numberRange(true, false)
       ],
       this.invalid
     )
@@ -203,8 +257,9 @@ export class TestData {
       [
         this.checkbox(true, false),
         this.text("Cogito ergo sum", true, false),
+        this.number(10, true, false),
         this.list("ergo", true, false),
-        this.range(true, false)
+        this.stringRange(true, false)
       ],
       this.invalid,
       true,
@@ -218,9 +273,29 @@ export class TestData {
     )
   }
 
+  mixedFieldGroup(): FieldGroup {
+    return new FieldGroup(
+      "Mixed Field Group",
+      [
+        this.checkbox(false, false, "non-editable checkbox"),
+        this.checkbox(true, false),
+        this.text("Cogito ergo sum", false, false, "non-editable text"),
+        this.text("Cogito ergo sum", true, false),
+        this.number(10, false, false, "non-editable number"),
+        this.number(10, true, false),
+        this.list("ergo", false, false, "non-editable list"),
+        this.list("ergo", true, false),
+        this.stringRange(false, false, "non-editable range"),
+        this.stringRange(true, false)
+      ],
+      this.invalid
+    )
+  }
+
   requiredBatchFieldGroup(
     checkBoxName: string = "checkBox",
     textName = "text",
+    numberName = "number",
     listName = "list",
     rangeName = "range"
   ): FieldGroup {
@@ -229,8 +304,9 @@ export class TestData {
       [
         this.checkbox(true, true, checkBoxName),
         this.text("", true, true, textName),
+        this.number(10, true, true, numberName),
         this.list("", true, true, listName),
-        this.range(true, true, rangeName)
+        this.stringRange(true, true, rangeName)
       ],
       this.invalid
     )
@@ -242,7 +318,7 @@ export class TestData {
       [
         this.checkbox(true, true),
         this.list("", true, true),
-        this.range(true, true)
+        this.stringRange(true, true)
       ],
       this.invalid,
       true,
@@ -289,7 +365,12 @@ export class SampleListItemConf extends ItemConf {
         "rangeB"
       )
       fg2.label = i.toString() + " " + fg2.label
-      items.push(new Item(name, name, name, ItemStatus.OK, [fg1, fg2]))
+      const dynamicField = this.testData.text("", true, true, "dynamic-text")
+
+      dynamicField.setCollector(() => ({ dynamictext: dynamicField.value }))
+      items.push(
+        new Item(name, name, name, ItemStatus.OK, [fg1, fg2], [dynamicField])
+      )
     }
     return items
   }

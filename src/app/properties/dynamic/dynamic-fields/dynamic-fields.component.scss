@@ -1,0 +1,25 @@
+.value {
+  width: 250px;
+}
+
+.center {
+  text-align: center;
+}
+
+.field {
+  padding: 20px;
+}
+
+.ng-invalid {
+  border-color: red;
+}
+
+.ng-valid {
+  border-color: black;
+}
+
+.read-only {
+  opacity: 1;
+  background-color: black !important;
+  border: none !important;
+}

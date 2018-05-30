@@ -1,8 +1,10 @@
+import { DynamicService } from "./../../dynamic/dynamic.service"
+import { DynamicItem } from "./../../dynamic/dynamic-item"
 import { FieldGroup, Field, FieldUIType } from "../../model/fields"
-import { Component, OnInit, Input } from "@angular/core"
-import { FormGroup, FormControl, Validators } from "@angular/forms"
+import { Component, OnInit, Input, ViewChild } from "@angular/core"
 
 import * as SI from "seamless-immutable"
+import { DynamicDirective } from "../../dynamic/dynamic.directive"
 
 @Component({
   selector: "app-fields-panel",
@@ -11,9 +13,12 @@ import * as SI from "seamless-immutable"
 })
 export class FieldsPanelComponent implements OnInit {
   @Input() fieldGroup: FieldGroup
+
   fields: Field[]
 
   fieldUIType = FieldUIType
+
+  constructor() {}
 
   ngOnInit() {
     this.fields = this.fieldGroup.fields

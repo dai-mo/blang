@@ -11,6 +11,11 @@
         <app-fields-panel [fieldGroup]="batchFields"></app-fields-panel>
         <p-button label="submit" (onClick)="submit($event, batchFields)"></p-button>
       </div>
+      <div *ngSwitchCase="'Mixed Forms'" class="layout">
+        <h2>{{mixedFields.label}}</h2>
+        <app-fields-panel [fieldGroup]="mixedFields"></app-fields-panel>
+        <p-button label="submit" (onClick)="submit($event, mixedFields)"></p-button>
+      </div>
       <div *ngSwitchCase="'Required Batch Forms'" class="layout">
         <h2>{{requiredBatchFields.label}}</h2>
         <app-fields-panel [fieldGroup]="requiredBatchFields"></app-fields-panel>
@@ -40,7 +45,7 @@
 <p-growl></p-growl>
 
 <app-item-list-dialog [dialogItemConf]="dialogListItemConf" [finaliseLabel]="'Submit'" [dialogHeader]="'Item List Dialog'"
-  [isVisible]="dialogListItemConf.isItemListDialogVisible"></app-item-list-dialog>
+  [isVisible]="dialogListItemConf.isItemListDialogVisible" [dynamicItem]="dynamicItem"></app-item-list-dialog>
 
 <app-item-list-dialog [dialogItemConf]="dialogSingleItemConf" [finaliseLabel]="'Submit'" [dialogHeader]="'Single Item Dialog'"
   [isVisible]="dialogSingleItemConf.isSingleItemDialogVisible"></app-item-list-dialog>
