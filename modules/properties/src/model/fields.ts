@@ -1,4 +1,3 @@
-import { FieldGroup } from "./fields"
 import { FormGroup, FormControl, Validators } from "@angular/forms"
 import { SelectItem } from "primeng/primeng"
 import * as SI from "seamless-immutable"
@@ -293,7 +292,7 @@ export abstract class ItemConf {
     return this.find(itemId).specificFields
   }
 
-  addspecificFields(itemId: string, specificFields: Field[]) {
+  addSpecificFields(itemId: string, specificFields: Field[]) {
     const item = this.find(itemId)
     if (item !== undefined) item.specificFields.push(...specificFields)
   }
