@@ -238,6 +238,7 @@ export class Item {
   status: ItemStatus
   fieldGroups: FieldGroup[]
   specificFields: Field[]
+  state: any
 
   constructor(
     id: string,
@@ -245,7 +246,8 @@ export class Item {
     description: string,
     status: ItemStatus = ItemStatus.OK,
     fieldGroups: FieldGroup[] = [],
-    specificFields: Field[] = []
+    specificFields: Field[] = [],
+    state: any = {}
   ) {
     this.id = id
     this.name = name
@@ -253,6 +255,7 @@ export class Item {
     this.status = status
     this.fieldGroups = fieldGroups
     this.specificFields = specificFields
+    this.state = state
   }
 }
 
