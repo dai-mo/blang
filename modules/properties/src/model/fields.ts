@@ -165,10 +165,6 @@ export class FieldGroup {
     this.submit = submit
     this.invalid = invalid
   }
-  disabled = "true"
-  add(field: Field) {
-    this.fields.push(field)
-  }
 
   collect() {
     let formValue = SI.from(this.form.getRawValue())
@@ -283,12 +279,22 @@ export abstract class ItemConf {
     return this.find(itemId).fieldGroups
   }
 
+  addFieldGroups(itemId: string, fieldGroups: FieldGroup[]) {
+    const item = this.find(itemId)
+    if (item !== undefined) item.fieldGroups.push(...fieldGroups)
+  }
+
   selectedItemFieldGroups(): FieldGroup[] {
     return this.fieldGroups(this.selectedItemId)
   }
 
   specificFields(itemId: string): Field[] {
     return this.find(itemId).specificFields
+  }
+
+  addSpecificFields(itemId: string, specificFields: Field[]) {
+    const item = this.find(itemId)
+    if (item !== undefined) item.specificFields.push(...specificFields)
   }
 
   selectedItemSpecificFields(): Field[] {
