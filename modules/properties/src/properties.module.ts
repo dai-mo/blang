@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { DynamicComponent } from "./dynamic/dynamic.component"
 import { DynamicDirective } from "./dynamic/dynamic.directive"
 import { ItemListDialogComponent } from "./dialog/item-list/item-list-dialog.component"

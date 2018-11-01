@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { enableProdMode } from "@angular/core"
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic"
 

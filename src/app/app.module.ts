@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { MatSliderModule } from "@angular/material/slider"
 import { BrowserModule } from "@angular/platform-browser"
 import { NgModule } from "@angular/core"

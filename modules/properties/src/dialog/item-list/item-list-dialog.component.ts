@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { Component, OnInit, Input } from "@angular/core"
 import { ItemConf } from "../../model/fields"
 import { DynamicItem } from "../../dynamic/dynamic-item";

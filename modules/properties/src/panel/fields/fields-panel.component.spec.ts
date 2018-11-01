@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { async, ComponentFixture, TestBed } from "@angular/core/testing"
 import { FieldsPanelComponent } from "./fields-panel.component"
 

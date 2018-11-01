@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { DynamicFieldsComponent } from "./dynamic/dynamic-fields/dynamic-fields.component"
 import { ItemStatus } from "./../../../modules/properties/src/model/fields"
 import { MessageService } from "primeng/components/common/messageservice"

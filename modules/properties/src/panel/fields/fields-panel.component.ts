@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { DynamicService } from "./../../dynamic/dynamic.service"
 import { DynamicItem } from "./../../dynamic/dynamic-item"
 import { FieldGroup, Field, FieldUIType } from "../../model/fields"

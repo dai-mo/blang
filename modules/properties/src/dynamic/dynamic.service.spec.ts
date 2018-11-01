@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { TestBed, inject } from "@angular/core/testing"
 
 import { DynamicService } from "./dynamic.service"

@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { DynamicDirective } from "./dynamic.directive"
 import {
   Injectable,

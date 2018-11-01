@@ -10,8 +10,27 @@
     "pack-all": "npm run pack-properties",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
-  },
+    "e2e": "ng e2e",
+    "licchkadd": "license-check-and-add"
+    },
+    "license-check-and-add-config": {
+      "folder": ".",
+      "license": "header.txt",
+      "exact_paths_method": "INCLUDE",
+      "exact_paths": [
+      "modules",
+      "src"
+      ],
+      "file_type_method": "INCLUDE",
+      "file_types": [
+        ".ts",
+        ".scss",
+        ".css"
+      ],
+      "insert_license": true,
+      "clear_license": false
+    },
+  
   "private": true,
   "dependencies": {
     "@angular/animations": "5.2.0",
