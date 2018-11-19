@@ -1,4 +1,12 @@
-# Alambeek Angular Modules Project
+# Daimo Angular Modules Project
+
+This projects contains [PrimeNg](https://www.primefaces.org/primeng)-based Angular modules used in the Daimo platform.
+
+## Features
+
+The main features of this project include,
+
+- Properties Module : This module provides generic UI components to easily build Angular Forms.
 
 # License
 
